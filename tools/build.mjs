@@ -457,6 +457,10 @@ const HEADERS = `/*
 /admin.html
   Cache-Control: no-store
   X-Robots-Tag: noindex, nofollow
+
+/panel-en-tu-computadora.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
 `;
 
 const ROBOTS = `User-agent: *
@@ -539,17 +543,22 @@ Para que la direccion sea presentable:
 
 EL PANEL
 --------
-Se abre en tusitio/admin.html
+Se abre en tusitio/admin.html, y pide contrasena.
 
-Subiendo esta carpeta a mano el panel funciona en "modo local": editas y te
-descarga un carta.json que vuelves a subir aqui, junto a index.html.
+Subiendo esta carpeta a mano (sin el repositorio) NO hay servidor que pueda
+comprobar una contrasena, asi que el panel se queda apagado: muestra una
+pantalla que explica como encenderlo y no abre el editor. Es a proposito: un
+candado que se revisa en el navegador del visitante no es un candado.
 
-Para que publique en vivo -cambias un precio y los clientes lo ven al
-instante, sin volver a subir nada- el sitio tiene que desplegarse desde el
-repositorio del proyecto y llevar la variable ADMIN_PASSWORD. Los pasos
-completos estan en docs/panel.md.
+Para cambiar la carta mientras tanto, usa el archivo
+panel-en-tu-computadora.html que viene en el proyecto: se abre con doble clic
+desde tu computadora, no esta en internet, y al publicar te descarga un
+carta.json que subes a esta carpeta junto a index.html.
 
-Si no vas a usar el panel, borra admin.html antes de subir la carpeta.
+Para que el panel publique en vivo -cambias un precio y los clientes lo ven al
+instante- el sitio tiene que desplegarse desde el repositorio del proyecto y
+llevar la variable ADMIN_PASSWORD, de 12 caracteres o mas. Los pasos completos
+estan en docs/panel.md.
 
 
 CUALQUIER OTRO HOSTING
@@ -590,6 +599,9 @@ if (!balanced(adminCss, '{', '}')) throw new Error('CSS del panel con llaves des
 
 const adminJs = [
   `window.SLUGS_BASE=${inlineJSON(Object.keys(IMAGES_FULL))};`,
+  /* La carta viaja dentro del panel para que la copia que se abre con doble
+     clic desde la computadora funcione sin red. */
+  `window.CARTA_EMBEBIDA=${inlineJSON(BASE_DOC)};`,
   ...['src/lib/document.js', 'src/admin/admin.js'].map((file) =>
     read(file)
       .replace(/^\s*import[^\n]*\n/gm, '')
@@ -610,7 +622,13 @@ const adminCsp = [
   "form-action 'none'"
 ].join('; ');
 
-const adminHtml = `<!doctype html>
+/* El logotipo va incrustado cuando el panel se abre desde el disco: ahí no hay
+   carpeta img/ al lado. */
+const logoData = `data:image/webp;base64,${readFileSync(
+  join(ROOT, 'dist/img/logo-256.webp')
+).toString('base64')}`;
+
+const panelHtml = (logo, offline = false) => `<!doctype html>
 <html lang="es-MX">
 <head>
 <meta charset="utf-8">
@@ -620,15 +638,18 @@ const adminHtml = `<!doctype html>
 <meta name="theme-color" content="#0d0c0b">
 <meta name="color-scheme" content="dark">
 <title>Panel · ${escapeAttr(BUSINESS.name)}</title>
-<link rel="icon" href="img/logo-256.webp" type="image/webp">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="${FONTS}">
+<link rel="icon" href="${logo}">
+${
+  offline
+    ? '<!-- sin tipografías externas: esta copia funciona sin internet -->'
+    : `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="${FONTS}">`
+}
 <style>${adminCss}</style>
 </head>
 <body>
 <header class="top">
   <div class="wrap top__in">
-    <img src="img/logo-256.webp" width="36" height="36" alt="">
+    <img src="${logo}" width="36" height="36" alt="">
     <h1>Panel<span class="top__brand"> · ${escapeText(BUSINESS.name)}</span></h1>
     <span class="top__sp"></span>
     <span class="pill" id="modo">Cargando…</span>
@@ -639,15 +660,42 @@ const adminHtml = `<!doctype html>
 <main class="wrap">
   <section class="gate" id="gate" hidden>
     <form>
+      <img class="gate__mark" src="${logo}" width="72" height="72" alt="">
       <h2>Entrar al panel</h2>
       <p>Escribe la contraseña del panel para cambiar la carta.</p>
+      <p class="msg" id="gate-nota" hidden></p>
       <div class="f">
         <label for="password">Contraseña</label>
-        <input id="password" type="password" autocomplete="current-password" required>
+        <input id="password" type="password" autocomplete="current-password"
+               autocapitalize="off" autocorrect="off" spellcheck="false" required>
       </div>
       <p class="msg msg--bad" id="gate-error" hidden></p>
       <button class="btn btn--primary" id="entrar" type="submit">Entrar</button>
+      <small>La sesión se cierra sola tras 30 minutos sin actividad, y al cerrar esta pestaña.</small>
     </form>
+  </section>
+
+  <section class="gate" id="apagado" hidden>
+    <div class="gate__box">
+      <img class="gate__mark" src="${logo}" width="72" height="72" alt="">
+      <h2>El panel está apagado en este sitio</h2>
+      <p>
+        Esta copia de la carta se publicó sin el servidor del panel. Sin él no hay
+        contraseña que comprobar, así que el panel no se abre: cualquier candado
+        que se revisara aquí, en el navegador del visitante, no sería un candado.
+      </p>
+      <p>
+        Para encenderlo hay que publicar el sitio desde el repositorio del proyecto
+        y poner la contraseña en la variable <code>ADMIN_PASSWORD</code>. Los pasos
+        están en <code>docs/panel.md</code>.
+      </p>
+      <p>
+        Mientras tanto, para cambiar la carta usa el archivo
+        <code>panel-en-tu-computadora.html</code> que viene con el proyecto: se abre
+        con doble clic desde tu computadora y no está en internet.
+      </p>
+      <a class="btn btn--primary" href="/">Ver la carta</a>
+    </div>
   </section>
 
   <div id="app" hidden>
@@ -705,7 +753,14 @@ const adminHtml = `<!doctype html>
 </body>
 </html>`;
 
-writeFileSync(join(ROOT, 'dist/admin.html'), adminHtml);
+/* Dos copias del mismo panel:
+   · dist/admin.html            va al sitio y sólo abre con contraseña del
+                                servidor; sin funciones se muestra apagado.
+   · panel-en-tu-computadora.html  se abre con doble clic desde la computadora.
+                                No está en internet, así que no hay nada que
+                                cerrar con llave: edita y descarga carta.json. */
+writeFileSync(join(ROOT, 'dist/admin.html'), panelHtml('img/logo-256.webp'));
+writeFileSync(join(ROOT, 'panel-en-tu-computadora.html'), panelHtml(logoData, true));
 
 /* El documento con el que se compiló el sitio, dentro del propio bundle de la
    función: es lo que se sirve mientras nadie haya publicado nada. Va aquí y no
@@ -741,5 +796,6 @@ console.log(`build ok
   dist/index.html     ${kb('dist/index.html')} KB
   dist/artifact.html  ${kb('dist/artifact.html')} KB
   dist/admin.html     ${kb('dist/admin.html')} KB
+  panel-en-tu-computadora.html  ${kb('panel-en-tu-computadora.html')} KB
   css ${(css.length / 1024).toFixed(1)} KB · js ${(js.length / 1024).toFixed(1)} KB (incl. datos)
   ${catalog.products.length} productos · ${catalog.categories.length} categorías`);

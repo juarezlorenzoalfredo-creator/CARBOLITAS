@@ -698,6 +698,60 @@ for (const [width, height] of VIEWPORTS) {
   check(erroresPanel.length === 0, 'P12 el panel no produce errores en consola', erroresPanel.join(' | '));
   check(erroresCarta.length === 0, 'P12 la carta no produce errores en consola', erroresCarta.join(' | '));
 
+  /* --- la sesión --- */
+  await page.bringToFront();
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+  check(
+    await page.locator('#app').isVisible(),
+    'P15 recargar la página no expulsa del panel'
+  );
+  check(!(await page.locator('#gate').isVisible()), 'P15 no vuelve a pedir la contraseña');
+
+  /* Una sesión guardada pero vieja no debe abrir el panel: el teléfono que
+     restaura la pestaña horas después tiene que volver a pedir contraseña. */
+  await page.evaluate(() => {
+    const k = 'carbolitas.panel.sesion.v1';
+    const s = JSON.parse(sessionStorage.getItem(k));
+    s.visto = Date.now() - 31 * 60 * 1000;
+    sessionStorage.setItem(k, JSON.stringify(s));
+  });
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+  check(
+    await page.locator('#gate').isVisible(),
+    'P15 media hora sin actividad vuelve a pedir contraseña'
+  );
+  await page.fill('#password', 'qa-carbolitas-2026-larga');
+  await page.click('#entrar');
+  await page.waitForSelector('#app:not([hidden])');
+
+  await page.click('#salir');
+  await page.waitForSelector('#gate:not([hidden])');
+  check(await page.locator('#gate').isVisible(), 'P16 salir cierra la sesión');
+  const guardada = await page.evaluate(() =>
+    sessionStorage.getItem('carbolitas.panel.sesion.v1')
+  );
+  check(guardada === null, 'P16 el pase se borra del navegador al salir');
+
+  /* y el pase ya no vale en el servidor, aunque alguien lo hubiera copiado */
+  const reusado = await page.evaluate(async (t) => {
+    const r = await fetch('api/publicar', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${t}` },
+      body: JSON.stringify({ doc: { products: [] } })
+    });
+    return r.status;
+  }, JSON.parse(guardada || 'null')?.token || 'sin-token');
+  check(reusado === 401, 'P16 un pase copiado deja de servir tras salir', `HTTP ${reusado}`);
+
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+  check(
+    await page.locator('#gate').isVisible(),
+    'P17 tras salir, recargar vuelve a pedir contraseña'
+  );
+
   /* el panel también en escritorio */
   const ancho = await context.newPage();
   await ancho.setViewportSize({ width: 1280, height: 800 });
@@ -730,6 +784,53 @@ for (const [width, height] of VIEWPORTS) {
   check(chicos.length === 0, 'P14 objetivos táctiles del panel ≥40px', chicos.join(' | ') || 'todos');
 
   await context.close();
+}
+
+/* ============ 5. el panel publicado SIN funciones ============
+   Un sitio estático no puede comprobar ninguna contraseña: el candado se
+   revisaría en el navegador de quien entra, y eso no es un candado. El panel
+   tiene que quedarse apagado, sin pintar la carta siquiera. */
+{
+  const estatico = createServer(async (req, res) => {
+    const url = new URL(req.url, 'http://localhost');
+    const rel = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, '');
+    try {
+      const file = join(DIST, rel === '/' ? 'index.html' : rel);
+      const data = await readFile(file);
+      res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream' });
+      res.end(data);
+    } catch {
+      res.writeHead(404).end('not found');
+    }
+  });
+  await new Promise((r) => estatico.listen(0, r));
+  const base = `http://127.0.0.1:${estatico.address().port}/`;
+
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  const errores = [];
+  page.on('pageerror', (e) => errores.push(e.message));
+  await page.goto(`${base}admin.html`, { waitUntil: 'load' });
+  await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+
+  check(await page.locator('#apagado').isVisible(), 'P18 sin funciones el panel se muestra apagado');
+  check(!(await page.locator('#app').isVisible()), 'P18 el editor no se abre');
+  check(
+    (await page.locator('#lista-platillos .card').count()) === 0,
+    'P18 ni siquiera se pinta la carta'
+  );
+  check(!(await page.locator('#bar').isVisible()), 'P18 no hay botón de publicar');
+  check(errores.length === 0, 'P18 sin errores en consola', errores.join(' | '));
+  await page.screenshot({ path: join(SHOTS, 'p-08-apagado.png') });
+
+  /* la carta pública, en cambio, funciona igual que siempre */
+  const cliente = await context.newPage();
+  await cliente.goto(base, { waitUntil: 'load' });
+  await cliente.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+  check((await cliente.locator('.item').count()) === 9, 'P18 la carta sigue completa');
+
+  await context.close();
+  estatico.close();
 }
 
 await browser.close();
