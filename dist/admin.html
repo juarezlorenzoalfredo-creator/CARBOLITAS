@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Xo8ShWdGY+qCQ6vUkQ+7bqsTw9BANu9qKJvS94pSei8='; style-src 'sha256-NUGsCikANvdzZQS7PSTTyQ/RmyPmOeHGBWj1lkLLtuQ=' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+6c8ZVTQYGD1GdhUQAFhWnKGPerHJXsHGz2CqyHU6NE='; style-src 'sha256-2OT1WWolUJcuwTmjdR4IrsjgKSsZ2rwVoT1Agv5OV3o=' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0d0c0b">
 <meta name="color-scheme" content="dark">
 <title>Panel · CARBOLITAS</title>
-<link rel="icon" href="img/logo-256.webp" type="image/webp">
+<link rel="icon" href="img/logo-256.webp">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,600&family=Archivo:wght@400;500;600;700;800&display=swap">
 <style>:root {
@@ -609,6 +609,60 @@ font-size: 0.9rem;
 .stock {
 padding-inline: 0.55rem;
 }
+}
+.gate__mark {
+width: 4.5rem;
+height: 4.5rem;
+border-radius: 50%;
+margin-inline: auto;
+}
+.gate__box {
+width: min(30rem, 100%);
+background: var(--carbon);
+border: 1px solid var(--linea);
+border-radius: var(--r);
+padding: 1.75rem 1.5rem;
+display: grid;
+gap: 0.9rem;
+text-align: center;
+}
+.gate__box h2 {
+font-family: var(--display);
+margin: 0;
+font-size: 1.35rem;
+line-height: 1.2;
+}
+.gate__box p {
+margin: 0;
+color: var(--crema-2);
+font-size: 0.875rem;
+line-height: 1.55;
+text-align: left;
+}
+.gate__box code {
+font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+font-size: 0.85em;
+background: var(--carbon-3);
+border-radius: 0.3rem;
+padding: 0.1rem 0.35rem;
+color: var(--crema);
+}
+.gate__box .btn {
+justify-self: center;
+text-decoration: none;
+}
+.gate form small {
+color: var(--crema-3);
+font-size: 0.75rem;
+line-height: 1.45;
+text-align: center;
+}
+.gate form h2,
+.gate form p {
+text-align: center;
+}
+.pill[data-mode='archivo']::before {
+background: var(--rojo);
 }</style>
 </head>
 <body>
@@ -625,15 +679,42 @@ padding-inline: 0.55rem;
 <main class="wrap">
   <section class="gate" id="gate" hidden>
     <form>
+      <img class="gate__mark" src="img/logo-256.webp" width="72" height="72" alt="">
       <h2>Entrar al panel</h2>
       <p>Escribe la contraseña del panel para cambiar la carta.</p>
+      <p class="msg" id="gate-nota" hidden></p>
       <div class="f">
         <label for="password">Contraseña</label>
-        <input id="password" type="password" autocomplete="current-password" required>
+        <input id="password" type="password" autocomplete="current-password"
+               autocapitalize="off" autocorrect="off" spellcheck="false" required>
       </div>
       <p class="msg msg--bad" id="gate-error" hidden></p>
       <button class="btn btn--primary" id="entrar" type="submit">Entrar</button>
+      <small>La sesión se cierra sola tras 30 minutos sin actividad, y al cerrar esta pestaña.</small>
     </form>
+  </section>
+
+  <section class="gate" id="apagado" hidden>
+    <div class="gate__box">
+      <img class="gate__mark" src="img/logo-256.webp" width="72" height="72" alt="">
+      <h2>El panel está apagado en este sitio</h2>
+      <p>
+        Esta copia de la carta se publicó sin el servidor del panel. Sin él no hay
+        contraseña que comprobar, así que el panel no se abre: cualquier candado
+        que se revisara aquí, en el navegador del visitante, no sería un candado.
+      </p>
+      <p>
+        Para encenderlo hay que publicar el sitio desde el repositorio del proyecto
+        y poner la contraseña en la variable <code>ADMIN_PASSWORD</code>. Los pasos
+        están en <code>docs/panel.md</code>.
+      </p>
+      <p>
+        Mientras tanto, para cambiar la carta usa el archivo
+        <code>panel-en-tu-computadora.html</code> que viene con el proyecto: se abre
+        con doble clic desde tu computadora y no está en internet.
+      </p>
+      <a class="btn btn--primary" href="/">Ver la carta</a>
+    </div>
   </section>
 
   <div id="app" hidden>
@@ -688,6 +769,7 @@ padding-inline: 0.55rem;
 <p class="toast" id="toast" role="status" data-on="false"></p>
 
 <script type="module">window.SLUGS_BASE=["alitas-salsa","alitas-carbon","boneless","burger-sencilla","burger-especial","burger-suprema","carbopapas","papas","portada","portada-alta","local","logo"];
+window.CARTA_EMBEBIDA={"schema":1,"updatedAt":"2026-09-23T18:57:45.507Z","currency":"MXN","business":{"whatsapp":"524471257475","phone":"4471257475","address":"Av. 16 de Septiembre 46, San Miguel Curahuango, 61253 Maravatío de Ocampo, Mich.","mapsUrl":"https://maps.app.goo.gl/UfXuMFMgDF3gr5Z59","timeZone":"America/Mexico_City","schedule":{"days":[0,1,3,4,5,6],"from":1110,"to":1320},"notice":""},"categories":[{"id":"alitas","name":"Alitas","kicker":"Al carbón","note":"Orden de 7 piezas (ó a elección). Acompañadas de vegetales y aderezo ranch."},{"id":"boneless","name":"Boneless","kicker":"Sin hueso","note":"Orden de 7 piezas. Acompañados de vegetales y aderezo ranch."},{"id":"burgers","name":"Burgers","kicker":"A la parrilla","note":"Hechas al momento sobre el carbón."},{"id":"papas","name":"Papas","kicker":"Sazonadas","note":""},{"id":"dogos","name":"Dogos","kicker":"Con tocino","note":"Con jitomate y cebolla. Mayonesa, catsup y mostaza."}],"optionGroups":{"salsa":{"id":"salsa","label":"Elige tu salsa","hint":"","type":"single","required":true,"choices":[{"id":"mango-habanero","label":"Mango Habanero","priceDelta":0,"heat":3},{"id":"bufalo","label":"Búfalo","priceDelta":0,"heat":2},{"id":"barbecue","label":"Barbecue","priceDelta":0,"heat":1}]},"prep-alitas":{"id":"prep-alitas","label":"Preparación","hint":"Sin costo","type":"multi","required":false,"choices":[{"id":"salsa-aparte","label":"Salsa aparte","priceDelta":0},{"id":"sin-vegetales","label":"Sin vegetales","priceDelta":0},{"id":"sin-aderezo","label":"Sin aderezo","priceDelta":0}]},"prep-burger-base":{"id":"prep-burger-base","label":"Preparación","hint":"Sin costo","type":"multi","required":false,"choices":[{"id":"sin-tocino","label":"Sin tocino","priceDelta":0},{"id":"sin-vegetales","label":"Sin vegetales","priceDelta":0},{"id":"sin-aderezos","label":"Sin aderezos","priceDelta":0}]},"prep-burger-full":{"id":"prep-burger-full","label":"Preparación","hint":"Sin costo","type":"multi","required":false,"choices":[{"id":"sin-tocino","label":"Sin tocino","priceDelta":0},{"id":"sin-salchicha","label":"Sin salchicha","priceDelta":0},{"id":"sin-pina","label":"Sin piña","priceDelta":0},{"id":"sin-vegetales","label":"Sin vegetales","priceDelta":0},{"id":"sin-aderezos","label":"Sin aderezos","priceDelta":0}]},"prep-dogo":{"id":"prep-dogo","label":"Preparación","hint":"Sin costo","type":"multi","required":false,"choices":[{"id":"sin-jitomate","label":"Sin jitomate","priceDelta":0},{"id":"sin-cebolla","label":"Sin cebolla","priceDelta":0},{"id":"sin-mayonesa","label":"Sin mayonesa","priceDelta":0},{"id":"sin-catsup","label":"Sin catsup","priceDelta":0},{"id":"sin-mostaza","label":"Sin mostaza","priceDelta":0}]},"prep-papas":{"id":"prep-papas","label":"Preparación","hint":"Sin costo","type":"multi","required":false,"choices":[{"id":"sin-pimienta-limon","label":"Sin pimienta limón","priceDelta":0}]},"prep-carbopapas":{"id":"prep-carbopapas","label":"Preparación","hint":"Sin costo","type":"multi","required":false,"choices":[{"id":"sin-tocino","label":"Sin tocino","priceDelta":0},{"id":"queso-aparte","label":"Queso aparte","priceDelta":0}]}},"products":[{"id":"alitas-7","categoryId":"alitas","rank":"hero","name":"Alitas al carbón","kicker":"La casa","unit":"7 piezas","description":"Siete piezas asadas directo sobre el carbón y bañadas en la salsa que elijas. Van con vegetales y aderezo ranch.","basePrice":100,"image":"alitas-salsa","imageAlt":"Orden de alitas bañadas en salsa con bastones de zanahoria y apio","optionGroups":["salsa","prep-alitas"],"available":true},{"id":"boneless-7","categoryId":"boneless","rank":"featured","name":"Boneless","kicker":"Sin hueso","unit":"7 piezas","description":"Siete trozos empanizados y crujientes, cubiertos con tu salsa. Con vegetales y aderezo ranch.","basePrice":100,"image":"boneless","imageAlt":"Dos órdenes de boneless glaseados con salsa barbecue y aderezo ranch","optionGroups":["salsa","prep-alitas"],"available":true},{"id":"burger-suprema","categoryId":"burgers","rank":"hero","name":"Suprema","kicker":"Doble carne","unit":"","description":"Doble carne, tocino, piña, salchicha, queso blanco y queso amarillo, vegetales y aderezos.","basePrice":110,"image":"burger-suprema","imageAlt":"Hamburguesa de doble carne con salchicha, piña y queso sobre la parrilla","optionGroups":["prep-burger-full"],"available":true},{"id":"burger-especial","categoryId":"burgers","rank":"featured","name":"Especial","kicker":"Con piña","unit":"","description":"Carne, tocino, salchicha, piña, queso amarillo y queso blanco, vegetales y aderezos.","basePrice":80,"image":"burger-especial","imageAlt":"Hamburguesa con piña asada y chile toreado servida en plato de barro","optionGroups":["prep-burger-full"],"available":true},{"id":"burger-sencilla","categoryId":"burgers","rank":"regular","name":"Sencilla","kicker":"La de siempre","unit":"","description":"Carne, tocino, queso amarillo, vegetales y aderezos.","basePrice":65,"image":"burger-sencilla","imageAlt":"Hamburguesa sencilla con tocino y chile toreado en plato negro","optionGroups":["prep-burger-base"],"available":true},{"id":"carbopapas","categoryId":"papas","rank":"featured","name":"Carbopapas","kicker":"Con queso","unit":"","description":"Papas fritas sazonadas, bañadas con queso amarillo y coronadas con tocino frito.","basePrice":80,"image":"carbopapas","imageAlt":"Papas fritas bañadas en queso amarillo con tocino frito encima","optionGroups":["prep-carbopapas"],"available":true},{"id":"papas-fritas","categoryId":"papas","rank":"regular","name":"Papas fritas","kicker":"Pimienta limón","unit":"orden","description":"Orden de papas fritas sazonadas con pimienta limón.","basePrice":60,"image":"papas","imageAlt":"Orden de papas fritas sazonadas con pimienta limón","optionGroups":["prep-papas"],"available":true},{"id":"carbodogo","categoryId":"dogos","rank":"featured","name":"Carbodogo","kicker":"Al carbón","unit":"","description":"Salchicha para asar envuelta en tocino, directo al carbón. Con jitomate y cebolla. Mayonesa, catsup y mostaza.","basePrice":35,"image":null,"imageAlt":"","optionGroups":["prep-dogo"],"available":true},{"id":"hotdog","categoryId":"dogos","rank":"regular","name":"Hotdog con tocino","kicker":"Con tocino","unit":"","description":"Salchicha acompañada con tocino. Con jitomate y cebolla. Mayonesa, catsup y mostaza.","basePrice":30,"image":null,"imageAlt":"","optionGroups":["prep-dogo"],"available":true}],"images":{}};
 /* Caracteres de control e invisibles: nunca deben llegar al texto guardado. */
 const INVISIBLES = new RegExp('[\\u0000-\\u001F\\u007F\\u200B-\\u200D\\uFEFF]', 'g');
 const ID_RE = new RegExp('^[a-z0-9][a-z0-9-]{0,39}$');
@@ -1090,8 +1172,12 @@ const pesos = (n) => {
 const estado = {
   doc: null,
   base: null,
-  modo: 'local', // 'live' | 'local'
+  /* Se arranca en el estado cerrado: si algo fallara antes de decidir, lo que
+     queda es el panel apagado y no el editor abierto. */
+  modo: 'archivo', // 'live' | 'local' | 'archivo'
   token: '',
+  expira: 0,
+  publicando: false,
   cartaPrecargada: null,
   sucio: false,
   abiertos: new Set(),
@@ -1213,6 +1299,11 @@ async function pedir(ruta, opciones = {}) {
 
 
 async function detectarModo() {
+  /* Android abre un .html descargado con content:// en vez de file://.
+     Ninguno de los dos esquemas se puede servir a internet, así que admitir
+     los dos no debilita la comprobación y evita que el panel de su propia
+     computadora se declare apagado. */
+  const enDisco = ['file:', 'content:'].includes(location.protocol);
   try {
     const res = await fetch('carta.json', { cache: 'no-store' });
     if (res.ok && res.headers.get('x-carbolitas-panel') === '1') {
@@ -1222,9 +1313,9 @@ async function detectarModo() {
     }
     if (res.ok) estado.cartaPrecargada = await res.json();
   } catch {
-    /* sin red: modo local */
+    /* sin red o desde el disco: se resuelve abajo */
   }
-  estado.modo = 'local';
+  estado.modo = enDisco ? 'local' : 'archivo';
 }
 
 /* ==================================================================
@@ -1252,7 +1343,10 @@ async function cargarCarta() {
   } catch {
     /* nada que cargar */
   }
-  return null;
+  /* Abierto desde el disco no hay nada que pedir por red: el panel lleva
+     dentro la carta con la que se compiló, y desde ahí se importa la más
+     reciente si hace falta. */
+  return Array.isArray(window.CARTA_EMBEBIDA?.products) ? window.CARTA_EMBEBIDA : null;
 }
 
 function slugsDisponibles() {
@@ -2298,6 +2392,7 @@ async function publicar() {
   const boton = $('#publicar');
   boton.disabled = true;
   boton.textContent = 'Publicando…';
+  estado.publicando = true;
   try {
     const r = await pedir('api/publicar', {
       method: 'POST',
@@ -2312,12 +2407,13 @@ async function publicar() {
     else aviso('good', 'Publicado. Los clientes ya ven la carta nueva.');
     toast('Carta publicada');
   } catch (err) {
-    if (/Sesión caducada/.test(err.message)) {
-      estado.token = '';
-      mostrarPuerta();
+    if (/Sesión caducada|sesión ya no es válida/i.test(err.message)) {
+      olvidarSesion();
+      mostrarPuerta('La sesión caducó. Vuelve a entrar y publica otra vez: tus cambios siguen aquí.');
     }
     aviso('bad', enEspanol(err.message));
   } finally {
+    estado.publicando = false;
     boton.textContent = 'Publicar cambios';
     boton.disabled = !estado.sucio;
   }
@@ -2327,17 +2423,120 @@ async function publicar() {
    acceso y arranque
    ================================================================== */
 
-function mostrarPuerta() {
+function mostrarPuerta(motivo) {
   $('#gate').hidden = false;
   $('#app').hidden = true;
   $('#bar').hidden = true;
+  $('#apagado').hidden = true;
+  /* Sin sesión abierta no hay nada de donde salir. */
+  $('#salir').hidden = true;
+  const nota = $('#gate-nota');
+  nota.textContent = motivo || '';
+  nota.hidden = !motivo;
   setTimeout(() => $('#password')?.focus(), 50);
 }
 
 function mostrarPanel() {
   $('#gate').hidden = true;
+  $('#apagado').hidden = true;
   $('#app').hidden = false;
   $('#bar').hidden = false;
+  $('#salir').hidden = estado.modo !== 'live';
+}
+
+
+function mostrarApagado() {
+  $('#gate').hidden = true;
+  $('#app').hidden = true;
+  $('#bar').hidden = true;
+  $('#salir').hidden = true;
+  $('#apagado').hidden = false;
+}
+
+/* ---------- la sesión ----------
+   El pase se guarda en sessionStorage y no en localStorage: vive mientras la
+   pestaña esté abierta y se borra al cerrarla. Así recargar la página no la
+   expulsa a media edición, pero cerrar el navegador sí cierra la sesión. */
+
+const CLAVE_SESION = 'carbolitas.panel.sesion.v1';
+const INACTIVIDAD_MS = 30 * 60 * 1000;
+
+function guardarSesion(token, expira, visto = Date.now()) {
+  estado.token = token;
+  estado.expira = expira;
+  try {
+    sessionStorage.setItem(CLAVE_SESION, JSON.stringify({ token, expira, visto }));
+  } catch {
+    /* sin sessionStorage la sesión vive sólo en memoria: sigue funcionando */
+  }
+}
+
+function olvidarSesion() {
+  estado.token = '';
+  estado.expira = 0;
+  try {
+    sessionStorage.removeItem(CLAVE_SESION);
+  } catch {
+    /* nada que borrar */
+  }
+}
+
+function recuperarSesion() {
+  try {
+    const s = JSON.parse(sessionStorage.getItem(CLAVE_SESION) || 'null');
+    const inactiva = Date.now() - Number(s?.visto || 0) > INACTIVIDAD_MS;
+    /* La media hora se comprueba también al recuperar. Sin esto, un teléfono
+       que restaura la pestaña horas después abría el panel sin contraseña:
+       el temporizador empezaba de cero y el pase aún no había caducado. */
+    if (s && s.token && !inactiva && Number(s.expira) > Date.now() + 60000) {
+      estado.token = s.token;
+      estado.expira = Number(s.expira);
+      return true;
+    }
+  } catch {
+    /* sesión ilegible: se pide contraseña */
+  }
+  olvidarSesion();
+  return false;
+}
+
+
+let inactividadTimer = 0;
+let vigilando = false;
+
+function tocarSesion() {
+  clearTimeout(inactividadTimer);
+  if (!estado.token) return;
+  guardarSesion(estado.token, estado.expira);
+  inactividadTimer = setTimeout(() => {
+    if (!estado.token) return;
+    olvidarSesion();
+    mostrarPuerta('Se cerró la sesión sola por seguridad. Tus cambios sin publicar siguen aquí.');
+  }, INACTIVIDAD_MS);
+}
+
+function vigilarSesion() {
+  tocarSesion();
+  /* Los oyentes se registran una sola vez: llamar a esto en cada entrada
+     acumulaba tres oyentes y un intervalo más por sesión. */
+  if (vigilando) return;
+  vigilando = true;
+
+  for (const ev of ['pointerdown', 'keydown', 'focus']) {
+    window.addEventListener(ev, tocarSesion, { passive: true });
+  }
+
+  /* El pase caduca a las 8 horas: se comprueba cada minuto para no dejarla
+     tocando "Publicar" contra una sesión que ya no vale. */
+  setInterval(() => {
+    /* Mientras se publica no se toca la pantalla: cortar aquí dejaría el
+       panel diciendo "caducó" justo cuando la publicación va a salir bien. */
+    if (estado.publicando) return;
+    if (estado.token && estado.expira && estado.expira <= Date.now()) {
+      olvidarSesion();
+      mostrarPuerta('La sesión caducó. Vuelve a entrar para publicar.');
+    }
+  }, 60000);
 }
 
 function pintarTodo() {
@@ -2362,14 +2561,28 @@ function conectarPestanas() {
   );
 }
 
+const ETIQUETA_MODO = {
+  live: 'Publica al instante',
+  local: 'Panel en tu computadora',
+  archivo: 'Panel apagado'
+};
+
 async function arrancar() {
   estado.slugsBase = Array.isArray(window.SLUGS_BASE) ? window.SLUGS_BASE : [];
   await detectarModo();
 
   const pill = $('#modo');
   pill.dataset.mode = estado.modo;
-  pill.textContent =
-    estado.modo === 'live' ? 'Publica al instante' : 'Se publica con un archivo';
+  pill.textContent = ETIQUETA_MODO[estado.modo];
+
+  /* Publicado sin funciones: no hay contraseña que comprobar en ningún
+     servidor, así que el panel no se abre. Se corta aquí, antes de cargar
+     nada: lo que no se pinta no se puede espiar. */
+  if (estado.modo === 'archivo') {
+    mostrarApagado();
+    document.documentElement.dataset.ready = 'true';
+    return;
+  }
 
   const crudo = await cargarCarta();
   if (!crudo) {
@@ -2423,37 +2636,47 @@ async function arrancar() {
     }
   }
 
-  if (estado.modo === 'live') mostrarPuerta();
-  else mostrarPanel();
+  if (estado.modo === 'live') {
+    /* Recargar la página no debe expulsarla: si la pestaña sigue abierta y el
+       pase no ha caducado, se entra directo. */
+    if (recuperarSesion()) mostrarPanel();
+    else mostrarPuerta();
+    vigilarSesion();
+  } else {
+    mostrarPanel();
+  }
 
   $('#gate form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const boton = $('#entrar');
+    const campo = $('#password');
     boton.disabled = true;
+    $('#gate-error').hidden = true;
     try {
       const r = await pedir('api/entrar', {
         method: 'POST',
-        body: JSON.stringify({ password: $('#password').value })
+        body: JSON.stringify({ password: campo.value })
       });
-      estado.token = r.token;
-      $('#password').value = '';
+      guardarSesion(r.token, r.expira);
+      campo.value = '';
       limpiarAviso();
       mostrarPanel();
+      vigilarSesion();
     } catch (err) {
-      $('#gate-error').textContent = err.message;
+      $('#gate-error').textContent = enEspanol(err.message);
       $('#gate-error').hidden = false;
+      campo.select();
     } finally {
       boton.disabled = false;
     }
   });
 
   $('#publicar').addEventListener('click', publicar);
-  $('#salir').hidden = estado.modo !== 'live';
   $('#salir').addEventListener('click', async () => {
     if (estado.sucio && !confirm('Tienes cambios sin publicar. ¿Salir de todos modos?')) return;
     const token = estado.token;
-    estado.token = '';
-    mostrarPuerta();
+    olvidarSesion();
+    mostrarPuerta('Sesión cerrada.');
     if (!token) return;
     /* Se avisa al servidor para que el token deje de valer también si alguien
        lo copió: borrarlo de esta pantalla no bastaría. */

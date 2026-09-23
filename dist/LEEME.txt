@@ -32,17 +32,22 @@ Para que la direccion sea presentable:
 
 EL PANEL
 --------
-Se abre en tusitio/admin.html
+Se abre en tusitio/admin.html, y pide contrasena.
 
-Subiendo esta carpeta a mano el panel funciona en "modo local": editas y te
-descarga un carta.json que vuelves a subir aqui, junto a index.html.
+Subiendo esta carpeta a mano (sin el repositorio) NO hay servidor que pueda
+comprobar una contrasena, asi que el panel se queda apagado: muestra una
+pantalla que explica como encenderlo y no abre el editor. Es a proposito: un
+candado que se revisa en el navegador del visitante no es un candado.
 
-Para que publique en vivo -cambias un precio y los clientes lo ven al
-instante, sin volver a subir nada- el sitio tiene que desplegarse desde el
-repositorio del proyecto y llevar la variable ADMIN_PASSWORD. Los pasos
-completos estan en docs/panel.md.
+Para cambiar la carta mientras tanto, usa el archivo
+panel-en-tu-computadora.html que viene en el proyecto: se abre con doble clic
+desde tu computadora, no esta en internet, y al publicar te descarga un
+carta.json que subes a esta carpeta junto a index.html.
 
-Si no vas a usar el panel, borra admin.html antes de subir la carpeta.
+Para que el panel publique en vivo -cambias un precio y los clientes lo ven al
+instante- el sitio tiene que desplegarse desde el repositorio del proyecto y
+llevar la variable ADMIN_PASSWORD, de 12 caracteres o mas. Los pasos completos
+estan en docs/panel.md.
 
 
 CUALQUIER OTRO HOSTING
