@@ -39,19 +39,12 @@ function igual(a, b) {
  */
 export function estadoPassword() {
   const pass = process.env.ADMIN_PASSWORD || '';
-  if (!pass) {
-    return {
-      ok: false,
-      motivo:
-        'El panel no tiene contraseña configurada. Añade la variable ADMIN_PASSWORD en Netlify (Site configuration → Environment variables).'
-    };
-  }
-  if (pass.length < MIN_PASSWORD) {
-    return {
-      ok: false,
-      motivo: `La contraseña del panel es demasiado corta: necesita al menos ${MIN_PASSWORD} caracteres. Cámbiala en Netlify, en la variable ADMIN_PASSWORD.`
-    };
-  }
+  /* El motivo es el mismo tanto si falta la contraseña como si es corta: a un
+     desconocido no hay que contarle que este sitio usa una clave débil, y a
+     quien administra el sitio le sirve igual para saber qué revisar. */
+  const motivo =
+    `El panel no está disponible. Si administras el sitio, revisa en Netlify (Site configuration → Environment variables) que ADMIN_PASSWORD exista y tenga al menos ${MIN_PASSWORD} caracteres.`;
+  if (!pass || pass.length < MIN_PASSWORD) return { ok: false, motivo };
   return { ok: true, motivo: '' };
 }
 
