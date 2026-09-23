@@ -20,6 +20,8 @@ tools/        build, pipeline de imagen, QA, servidor de desarrollo
 tests/        pruebas unitarias
 docs/         arquitectura, sistema de diseño, publicación, panel
 dist/         lo que se sube al hosting (lo genera el build)
+panel-en-tu-computadora.html   copia del panel para usar sin internet
+                               (la genera el build; NO se sube al sitio)
 ```
 
 ## Comandos
@@ -39,7 +41,10 @@ ADMIN_PASSWORD=una-contrasena-larga npm run dev
 
 - **Con panel en vivo:** conecta este repositorio a Netlify y añade la
   variable `ADMIN_PASSWORD`. Pasos completos en [docs/panel.md](docs/panel.md).
-- **Sin panel:** arrastra `dist/` a <https://app.netlify.com/drop>.
+- **Sin panel:** arrastra `dist/` a <https://app.netlify.com/drop>. En este
+  modo `admin.html` se queda apagado a propósito —sin servidor no hay
+  contraseña que comprobar— y la carta se edita con
+  `panel-en-tu-computadora.html`.
 
 Detalles y diagnóstico de problemas en [docs/hosting.md](docs/hosting.md).
 
@@ -51,4 +56,7 @@ Detalles y diagnóstico de problemas en [docs/hosting.md](docs/hosting.md).
 - **El logotipo original no se modifica.** El pipeline sólo lo recorta y le
   pone fondo transparente; el arte no se toca.
 - **Nada de secretos en el navegador.** La contraseña del panel vive en una
-  variable de entorno del sitio.
+  variable de entorno del sitio, y el pase de sesión se firma con un secreto
+  del servidor.
+- **Ningún candado de mentira.** Donde no se puede comprobar una contraseña de
+  verdad, el panel se apaga en lugar de aparentar que protege algo.
