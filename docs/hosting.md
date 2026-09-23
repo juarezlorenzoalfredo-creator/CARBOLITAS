@@ -87,7 +87,7 @@ Activa compresión (gzip o brotli): el HTML baja de ~97 KB a ~22 KB.
 | Pide iniciar sesión | Protección de visitantes activada en Netlify |
 | Página en blanco, errores de CSP | El hosting reescribió el HTML inline |
 | Una sola foto falta | Ese archivo no llegó: la carta lo sustituye por la placa de parrilla y sigue funcionando |
-| El panel dice "Modo local" | El sitio se subió sin funciones: es un despliegue por arrastre, no desde el repositorio |
+| El panel dice "Panel apagado" | El sitio se subió sin funciones: es un despliegue por arrastre, no desde el repositorio. Sin servidor no hay contraseña que comprobar, así que el panel no se abre |
 | El panel pide `ADMIN_PASSWORD` | Falta la variable de entorno, o el sitio no se ha vuelto a desplegar desde que se añadió |
 
 El build falla a propósito si el documento referencia una imagen que no existe

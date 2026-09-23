@@ -9,29 +9,44 @@ cliente.
 
 ---
 
-## Dos formas de publicar
+## Dónde se abre el panel, y con qué llave
 
-El panel detecta solo en cuál está y lo dice en la etiqueta de arriba.
+El panel puede estar en tres situaciones. Lo dice la etiqueta de arriba y se
+comporta distinto en cada una, a propósito.
 
-### Publicación en vivo (lo recomendable)
+### 1. En vivo, con contraseña — lo recomendable
 
-El sitio lleva unas funciones de servidor que guardan la carta. Entras con
-contraseña, tocas **Publicar cambios** y los clientes ven la carta nueva en
-cuanto recargan. No hay que volver a subir nada.
+El sitio lleva unas funciones de servidor. Pide contraseña, la comprueba **el
+servidor** (no el navegador), y al tocar **Publicar cambios** los clientes ven
+la carta nueva en cuanto recargan. Sin volver a subir nada.
 
-Requiere que el sitio de Netlify esté conectado a un repositorio —ver más
-abajo— porque las funciones necesitan instalarse durante el despliegue.
+Requiere que el sitio de Netlify esté conectado a un repositorio —ver abajo—
+porque las funciones se instalan durante el despliegue.
 
-### Modo local
+### 2. Publicado sin funciones: el panel queda apagado
 
-Si el sitio se subió arrastrando la carpeta, no hay servidor que guarde nada.
-El panel sigue sirviendo para editar: al tocar **Publicar cambios** descarga un
-`carta.json` que subes a la carpeta del sitio, junto a `index.html`. La carta
-lo lee al abrirse.
+Si el sitio se subió arrastrando la carpeta, no hay servidor. En esa situación
+`admin.html` **no se abre**: muestra una pantalla que explica cómo encenderlo y
+nada más. Ni siquiera carga la carta.
 
-En este modo el panel no pide contraseña —no hay con qué comprobarla— y no
-permite subir fotos nuevas. Si no lo vas a usar, borra `admin.html` de la
-carpeta antes de subirla.
+Podría ponerle una contraseña, pero sería mentira. En un archivo estático esa
+comprobación corre en el navegador de quien entra, y quien entra puede saltarla
+mirando el código de la página. Un candado que cualquiera puede abrir no
+protege; sólo hace creer que sí. Por eso el panel se apaga en vez de fingir.
+
+La carta pública funciona igual de bien en este modo: lo único apagado es el
+panel.
+
+### 3. En tu computadora
+
+Con el proyecto viene `panel-en-tu-computadora.html`. Se abre con **doble
+clic** y funciona sin internet: trae la carta dentro. Editas, tocas **Publicar
+cambios** y te descarga un `carta.json` que subes a la carpeta del sitio, junto
+a `index.html`.
+
+Ese archivo no pide contraseña porque no está en internet: sólo llega a él
+quien ya tiene acceso a tu computadora. **No lo subas al sitio**; si lo subes,
+detecta que está en internet y se apaga solo.
 
 ---
 
@@ -50,6 +65,19 @@ carpeta antes de subirla.
 
 Si abres el panel y dice que falta la contraseña, es que el paso 3 o el 4 no se
 completó.
+
+### La sesión
+
+Al entrar, la contraseña se cambia por un pase temporal:
+
+- Vive **mientras la pestaña esté abierta**. Cerrar el navegador la cierra.
+- Recargar la página **no** te expulsa a media edición.
+- Se cierra sola tras **30 minutos sin tocar nada**, y caduca a las 8 horas.
+- **Salir** la apaga en el servidor, no sólo en la pantalla: un pase copiado
+  deja de servir en ese momento.
+
+Tus cambios sin publicar no se pierden cuando la sesión se cierra: siguen ahí
+al volver a entrar.
 
 ### Por qué 12 caracteres
 
@@ -108,8 +136,8 @@ volver te pregunta si los recuperas.
 
 Lo que protege la carta, y por qué está así:
 
-- **La contraseña nunca viaja ni se guarda en el navegador.** Se cambia por un
-  pase temporal que caduca a las 8 horas.
+- **La contraseña nunca se guarda en el navegador.** Se cambia por un pase
+  temporal que caduca a las 8 horas y que se borra al cerrar la pestaña.
 - **Ese pase se firma con un secreto del sitio, no con la contraseña.** Si se
   firmara con la contraseña, quien capturara un pase podría probar contraseñas
   a millones por segundo en su propia computadora.
