@@ -181,3 +181,13 @@ test('el token se lee del encabezado Authorization', async () => {
   assert.equal(auth.tokenDe(con(null)), '');
   assert.equal(await auth.autorizado(con('Bearer ')), false);
 });
+
+test('el mensaje de configuración no dice si la contraseña es corta o falta', async () => {
+  /* A un desconocido no se le cuenta que este sitio usa una clave débil: es
+     justo el dato que le diría que vale la pena intentar adivinarla. */
+  const sinNada = await cargar(null);
+  const corta = await cargar('corta1234');
+  assert.equal(sinNada.estadoPassword().motivo, corta.estadoPassword().motivo);
+  assert.doesNotMatch(corta.estadoPassword().motivo, /corta|demasiado/i);
+  assert.match(corta.estadoPassword().motivo, /ADMIN_PASSWORD/);
+});
