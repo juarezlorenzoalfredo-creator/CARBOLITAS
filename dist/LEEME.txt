@@ -1,0 +1,63 @@
+CARBOLITAS - COMO PUBLICAR ESTA CARTA
+=====================================
+
+Lo que estas viendo es la carpeta COMPLETA del sitio. Se sube entera.
+No subas solo index.html: las fotografias viven en la subcarpeta img/ y el
+archivo HTML las busca junto a el.
+
+  index.html      la carta
+  admin.html      el panel para cambiar precios, platillos y horarios
+  carta.json      la carta en datos: es lo que el panel edita
+  404.html        pagina de error con la marca
+  img/            las fotos. SIN ESTA CARPETA NO HAY IMAGENES.
+  _headers        cabeceras de seguridad y de cache
+  netlify.toml    evita que Netlify reescriba el HTML
+  robots.txt
+
+
+NETLIFY, ARRASTRANDO LA CARPETA
+-------------------------------
+1. Entra a https://app.netlify.com/drop
+2. Arrastra ESTA CARPETA completa al recuadro. No abras la carpeta ni
+   selecciones los archivos sueltos: arrastra la carpeta.
+3. Espera a que termine. Ya esta publicado.
+
+Si el sitio pide iniciar sesion ("This site is private"):
+  Site configuration - Access & security - Visitor access
+  Mientras este privado, tus clientes ven un login de Netlify, no la carta.
+
+Para que la direccion sea presentable:
+  Site configuration - Site details - Change site name
+
+
+EL PANEL
+--------
+Se abre en tusitio/admin.html
+
+Subiendo esta carpeta a mano el panel funciona en "modo local": editas y te
+descarga un carta.json que vuelves a subir aqui, junto a index.html.
+
+Para que publique en vivo -cambias un precio y los clientes lo ven al
+instante, sin volver a subir nada- el sitio tiene que desplegarse desde el
+repositorio del proyecto y llevar la variable ADMIN_PASSWORD. Los pasos
+completos estan en docs/panel.md.
+
+Si no vas a usar el panel, borra admin.html antes de subir la carpeta.
+
+
+CUALQUIER OTRO HOSTING
+----------------------
+Sube el contenido de esta carpeta a la raiz del sitio. Funciona en Vercel,
+Cloudflare Pages, GitHub Pages, hosting compartido con cPanel o un servidor
+propio. No requiere base de datos ni servidor de aplicacion.
+
+
+COMPROBACION RAPIDA
+-------------------
+Abre la carta publicada y verifica:
+  - Se ven las fotos de las alitas y las hamburguesas.
+  - El logotipo redondo aparece arriba a la izquierda.
+  - Al tocar un platillo se abre la ficha para elegir salsa.
+  - El boton naranja abre WhatsApp con el pedido escrito.
+
+Si no se ven las fotos, casi siempre es que se subio solo el HTML.

@@ -1,0 +1,2486 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Xo8ShWdGY+qCQ6vUkQ+7bqsTw9BANu9qKJvS94pSei8='; style-src 'sha256-NUGsCikANvdzZQS7PSTTyQ/RmyPmOeHGBWj1lkLLtuQ=' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d0c0b">
+<meta name="color-scheme" content="dark">
+<title>Panel · CARBOLITAS</title>
+<link rel="icon" href="img/logo-256.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500;1,600&family=Archivo:wght@400;500;600;700;800&display=swap">
+<style>:root {
+color-scheme: dark;
+--noche: #0d0c0b;
+--carbon: #161412;
+--carbon-2: #1e1a17;
+--carbon-3: #272220;
+--linea: rgba(245, 239, 227, 0.12);
+--linea-2: rgba(245, 239, 227, 0.24);
+--crema: #f7f1e6;
+--crema-2: rgba(247, 241, 230, 0.68);
+--crema-3: rgba(247, 241, 230, 0.44);
+--brasa: #f2762b;
+--brasa-2: #ff9147;
+--verde: #25d366;
+--rojo: #ff7a6b;
+--font: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+--display: 'Playfair Display', Georgia, serif;
+--r: 0.9rem;
+--pill: 999px;
+}
+*,
+*::before,
+*::after {
+box-sizing: border-box;
+}
+[hidden] {
+display: none !important;
+}
+body {
+margin: 0;
+background: var(--noche);
+color: var(--crema);
+font-family: var(--font);
+font-size: 16px;
+line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+padding-bottom: 7rem;
+}
+button {
+font: inherit;
+color: inherit;
+background: none;
+border: 0;
+cursor: pointer;
+padding: 0;
+}
+input,
+select,
+textarea {
+font: inherit;
+color: var(--crema);
+background: var(--noche);
+border: 1px solid var(--linea-2);
+border-radius: 0.6rem;
+padding: 0.6rem 0.75rem;
+width: 100%;
+min-height: 2.9rem;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+outline: 2px solid var(--brasa-2);
+outline-offset: 2px;
+}
+textarea {
+min-height: 5rem;
+resize: vertical;
+line-height: 1.45;
+}
+.sr-only {
+position: absolute;
+width: 1px;
+height: 1px;
+overflow: hidden;
+clip-path: inset(50%);
+white-space: nowrap;
+}
+.wrap {
+max-width: 62rem;
+margin-inline: auto;
+padding: 0 clamp(0.85rem, 4vw, 1.75rem);
+}
+.top {
+position: sticky;
+top: 0;
+z-index: 20;
+background: rgba(13, 12, 11, 0.94);
+backdrop-filter: blur(14px);
+border-bottom: 1px solid var(--linea);
+}
+.top__in {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+min-height: 4rem;
+}
+.top img {
+width: 2.25rem;
+height: 2.25rem;
+border-radius: 50%;
+}
+.top h1 {
+font-family: var(--display);
+font-size: 1.1rem;
+margin: 0;
+font-weight: 700;
+letter-spacing: 0.02em;
+white-space: nowrap;
+}
+.top__brand {
+display: none;
+}
+@media (min-width: 34rem) {
+.top__brand {
+display: inline;
+}
+}
+.top__sp {
+margin-left: auto;
+}
+.pill {
+display: inline-flex;
+align-items: center;
+gap: 0.45rem;
+padding: 0.35rem 0.8rem;
+border-radius: var(--pill);
+border: 1px solid var(--linea-2);
+font-size: 0.75rem;
+font-weight: 700;
+color: var(--crema-2);
+white-space: nowrap;
+}
+.pill::before {
+content: '';
+width: 0.5rem;
+height: 0.5rem;
+border-radius: 50%;
+background: var(--crema-3);
+}
+.pill[data-mode='live']::before {
+background: var(--verde);
+box-shadow: 0 0 0.5rem var(--verde);
+}
+.pill[data-mode='local']::before {
+background: var(--brasa);
+}
+.tabs {
+display: flex;
+gap: 0.4rem;
+overflow-x: auto;
+scrollbar-width: none;
+padding: 0.75rem 0;
+}
+.tabs::-webkit-scrollbar {
+display: none;
+}
+.tab {
+flex: none;
+min-height: 2.75rem;
+padding-inline: 1rem;
+border-radius: var(--pill);
+border: 1px solid var(--linea);
+background: var(--carbon);
+color: var(--crema-2);
+font-size: 0.9rem;
+font-weight: 600;
+white-space: nowrap;
+}
+.tab[aria-selected='true'] {
+background: var(--brasa);
+border-color: var(--brasa);
+color: #fff;
+}
+.panel {
+padding-bottom: 2rem;
+}
+.panel[hidden] {
+display: none;
+}
+.card {
+background: var(--carbon);
+border: 1px solid var(--linea);
+border-radius: var(--r);
+margin-bottom: 0.75rem;
+overflow: hidden;
+}
+.card--off {
+opacity: 0.66;
+}
+.card__head {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+padding: 0.65rem 0.75rem;
+}
+.orden {
+font-size: 0.8rem;
+color: var(--crema-3);
+align-self: center;
+}
+.card__title {
+flex: 1;
+min-width: 0;
+text-align: left;
+display: flex;
+flex-direction: column;
+justify-content: center;
+min-height: 2.75rem;
+padding-block: 0.25rem;
+}
+.card__title b {
+display: block;
+font-size: 1rem;
+font-weight: 700;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.card__title span {
+font-size: 0.8rem;
+color: var(--crema-3);
+}
+.card__price {
+font-weight: 800;
+color: var(--brasa);
+font-variant-numeric: tabular-nums;
+white-space: nowrap;
+}
+.card__body {
+border-top: 1px solid var(--linea);
+padding: 0.9rem 0.75rem 1rem;
+display: grid;
+gap: 0.85rem;
+}
+.card__body[hidden] {
+display: none;
+}
+.chev {
+width: 2.5rem;
+height: 2.5rem;
+border-radius: 50%;
+background: var(--carbon-3);
+display: grid;
+place-items: center;
+font-size: 0.8rem;
+color: var(--crema-2);
+flex: none;
+}
+.grid2 {
+display: grid;
+gap: 0.85rem;
+}
+@media (min-width: 40rem) {
+.grid2 {
+grid-template-columns: 1fr 1fr;
+}
+.grid2 .full {
+grid-column: 1 / -1;
+}
+}
+.f label {
+display: block;
+font-size: 0.7rem;
+font-weight: 700;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(--crema-3);
+margin-bottom: 0.3rem;
+}
+.f small {
+display: block;
+margin-top: 0.3rem;
+font-size: 0.75rem;
+color: var(--crema-3);
+line-height: 1.4;
+}
+.switch {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+min-height: 2.75rem;
+padding: 0.35rem 0.8rem 0.35rem 0.4rem;
+border-radius: var(--pill);
+border: 1px solid var(--linea-2);
+background: var(--carbon-2);
+font-size: 0.85rem;
+font-weight: 700;
+white-space: nowrap;
+}
+.switch::before {
+content: '';
+width: 2.4rem;
+height: 1.4rem;
+border-radius: var(--pill);
+background: var(--carbon-3);
+border: 1px solid var(--linea-2);
+position: relative;
+transition: background 160ms;
+flex: none;
+box-shadow: inset 1.1rem 0 0 -0.9rem var(--crema-3);
+}
+.switch[aria-pressed='true'] {
+border-color: var(--verde);
+color: var(--crema);
+}
+.switch[aria-pressed='true']::before {
+background: var(--verde);
+box-shadow: inset -1.1rem 0 0 -0.9rem #06281a;
+}
+.btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 0.5rem;
+min-height: 2.9rem;
+padding-inline: 1.1rem;
+border-radius: var(--pill);
+border: 1px solid var(--linea-2);
+background: var(--carbon-2);
+font-size: 0.9rem;
+font-weight: 700;
+}
+.btn:hover {
+border-color: var(--brasa);
+}
+.btn--primary {
+background: var(--brasa);
+border-color: var(--brasa);
+color: #fff;
+}
+.btn--primary:hover {
+background: var(--brasa-2);
+}
+.btn--danger {
+color: var(--rojo);
+}
+.btn--ghost {
+background: none;
+border-color: transparent;
+color: var(--crema-3);
+}
+.btn:disabled {
+opacity: 0.45;
+cursor: not-allowed;
+}
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+align-items: center;
+}
+.row--end {
+justify-content: flex-end;
+}
+h2.sec {
+font-family: var(--display);
+font-size: 1.4rem;
+margin: 1.5rem 0 0.35rem;
+}
+p.sec {
+margin: 0 0 1rem;
+color: var(--crema-2);
+font-size: 0.9rem;
+max-width: 60ch;
+}
+.catgroup {
+margin-bottom: 1.5rem;
+}
+.catgroup > h3 {
+font-size: 0.7rem;
+font-weight: 700;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: var(--brasa);
+margin: 0 0 0.6rem;
+}
+.bar {
+position: fixed;
+inset: auto 0 0 0;
+z-index: 30;
+background: rgba(22, 20, 18, 0.97);
+backdrop-filter: blur(14px);
+border-top: 1px solid var(--linea);
+padding: 0.75rem 0 max(0.75rem, env(safe-area-inset-bottom));
+}
+.bar__in {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+.bar__state {
+flex: 1;
+min-width: 0;
+font-size: 0.8rem;
+line-height: 1.35;
+color: var(--crema-2);
+}
+.bar__state span {
+display: block;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.bar__state b {
+display: block;
+color: var(--crema);
+}
+.bar .btn--primary {
+min-height: 3.1rem;
+padding-inline: 1.5rem;
+}
+.gate {
+min-height: 70svh;
+display: grid;
+place-items: center;
+padding: 2rem 0;
+}
+.gate form {
+width: min(24rem, 100%);
+background: var(--carbon);
+border: 1px solid var(--linea);
+border-radius: var(--r);
+padding: 1.5rem;
+display: grid;
+gap: 0.9rem;
+}
+.gate h2 {
+font-family: var(--display);
+margin: 0;
+font-size: 1.5rem;
+}
+.gate p {
+margin: 0;
+color: var(--crema-2);
+font-size: 0.875rem;
+}
+.msg {
+border-radius: var(--r);
+padding: 0.8rem 1rem;
+font-size: 0.875rem;
+margin: 0.75rem 0;
+border: 1px solid var(--linea-2);
+background: var(--carbon-2);
+line-height: 1.5;
+}
+.msg--bad {
+border-color: rgba(255, 122, 107, 0.5);
+background: rgba(255, 122, 107, 0.1);
+}
+.msg--good {
+border-color: rgba(37, 211, 102, 0.45);
+background: rgba(37, 211, 102, 0.1);
+}
+.msg--warn {
+border-color: rgba(242, 118, 43, 0.5);
+background: rgba(242, 118, 43, 0.1);
+}
+.msg[hidden] {
+display: none;
+}
+.msg ul {
+margin: 0.5rem 0 0;
+padding-left: 1.1rem;
+}
+.toast {
+position: fixed;
+left: 50%;
+bottom: 6.5rem;
+transform: translate(-50%, 0.5rem);
+z-index: 40;
+background: var(--crema);
+color: var(--noche);
+font-weight: 700;
+font-size: 0.85rem;
+padding: 0.7rem 1.15rem;
+border-radius: var(--pill);
+box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.5);
+opacity: 0;
+pointer-events: none;
+transition: opacity 200ms, transform 200ms;
+max-width: calc(100% - 2rem);
+text-align: center;
+}
+.toast[data-on='true'] {
+opacity: 1;
+transform: translate(-50%, 0);
+}
+.foto {
+display: flex;
+gap: 0.85rem;
+align-items: center;
+}
+.foto__thumb {
+width: 5.5rem;
+height: 4.125rem;
+border-radius: 0.6rem;
+background: var(--carbon-3);
+object-fit: cover;
+flex: none;
+display: block;
+}
+.foto__none {
+width: 5.5rem;
+height: 4.125rem;
+border-radius: 0.6rem;
+flex: none;
+display: grid;
+place-items: center;
+font-size: 0.7rem;
+color: var(--crema-3);
+background:
+repeating-linear-gradient(118deg, #241d16 0 9px, #14100c 9px 18px);
+}
+.dias {
+display: flex;
+flex-wrap: wrap;
+gap: 0.4rem;
+}
+.dia {
+min-height: 2.75rem;
+min-width: 3.4rem;
+padding-inline: 0.6rem;
+border-radius: var(--pill);
+border: 1px solid var(--linea-2);
+background: var(--carbon-2);
+font-size: 0.85rem;
+font-weight: 700;
+color: var(--crema-2);
+}
+.dia[aria-pressed='true'] {
+background: var(--brasa);
+border-color: var(--brasa);
+color: #fff;
+}
+.spacer {
+flex: 1;
+}
+.grow {
+flex: 1;
+min-width: 11rem;
+}
+.narrow {
+width: 8.5rem;
+}
+.mt {
+margin-top: 0.85rem;
+}
+.mt-sm {
+margin-top: 0.6rem;
+}
+.stock {
+flex: none;
+display: inline-flex;
+align-items: center;
+gap: 0.4rem;
+min-height: 2.75rem;
+padding-inline: 0.7rem;
+border-radius: var(--pill);
+border: 1px solid var(--linea-2);
+background: var(--carbon-3);
+font-size: 0.8rem;
+font-weight: 700;
+color: var(--crema-2);
+white-space: nowrap;
+}
+.stock::before {
+content: '';
+flex: none;
+width: 0.6rem;
+height: 0.6rem;
+border-radius: 50%;
+background: var(--brasa);
+}
+.stock[aria-pressed='true'] {
+border-color: rgba(37, 211, 102, 0.5);
+color: var(--crema);
+}
+.stock[aria-pressed='true']::before {
+background: var(--verde);
+box-shadow: 0 0 0.45rem var(--verde);
+}
+.card__title b {
+max-width: 100%;
+}
+.card--mal {
+border-color: rgba(255, 122, 107, 0.6);
+}
+.card--mal .card__title b {
+color: var(--rojo);
+}
+@media (max-width: 22rem) {
+.card__price {
+font-size: 0.9rem;
+}
+.stock {
+padding-inline: 0.55rem;
+}
+}</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top__in">
+    <img src="img/logo-256.webp" width="36" height="36" alt="">
+    <h1>Panel<span class="top__brand"> · CARBOLITAS</span></h1>
+    <span class="top__sp"></span>
+    <span class="pill" id="modo">Cargando…</span>
+    <button class="btn btn--ghost" id="salir" type="button">Salir</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="gate" id="gate" hidden>
+    <form>
+      <h2>Entrar al panel</h2>
+      <p>Escribe la contraseña del panel para cambiar la carta.</p>
+      <div class="f">
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+      <p class="msg msg--bad" id="gate-error" hidden></p>
+      <button class="btn btn--primary" id="entrar" type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <div class="tabs" role="tablist">
+      <button class="tab" type="button" role="tab" aria-selected="true" data-panel="tab-platillos">Platillos</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-panel="tab-categorias">Categorías</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-panel="tab-opciones">Salsas y opciones</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-panel="tab-negocio">Negocio</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-panel="tab-respaldo">Respaldo</button>
+    </div>
+
+    <p class="msg" id="aviso" hidden></p>
+
+    <section class="panel" id="tab-platillos">
+      <h2 class="sec">Platillos</h2>
+      <p class="sec">Toca un platillo para abrirlo y cambiar su precio, su foto o su orden. El botón verde de la derecha lo agota o lo repone sin abrir nada.</p>
+      <div id="lista-platillos"></div>
+    </section>
+
+    <section class="panel" id="tab-categorias" hidden>
+      <h2 class="sec">Categorías</h2>
+      <p class="sec">Las secciones de la carta y el orden en que aparecen. Para quitar una, primero mueve o quita sus platillos.</p>
+      <div id="lista-categorias"></div>
+    </section>
+
+    <section class="panel" id="tab-opciones" hidden>
+      <h2 class="sec">Salsas y opciones</h2>
+      <p class="sec">Lo que el cliente elige antes de agregar un platillo.</p>
+      <div id="lista-opciones"></div>
+    </section>
+
+    <section class="panel" id="tab-negocio" hidden>
+      <h2 class="sec">Datos del negocio</h2>
+      <p class="sec">Lo que aparece en la carta y a dónde llega el pedido.</p>
+      <div id="form-negocio"></div>
+    </section>
+
+    <section class="panel" id="tab-respaldo" hidden>
+      <h2 class="sec">Respaldo</h2>
+      <div id="form-respaldo"></div>
+    </section>
+  </div>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <div class="wrap bar__in">
+    <div class="bar__state" id="bar-state"></div>
+    <button class="btn btn--primary" id="publicar" type="button" disabled>Publicar cambios</button>
+  </div>
+</div>
+
+<p class="toast" id="toast" role="status" data-on="false"></p>
+
+<script type="module">window.SLUGS_BASE=["alitas-salsa","alitas-carbon","boneless","burger-sencilla","burger-especial","burger-suprema","carbopapas","papas","portada","portada-alta","local","logo"];
+/* Caracteres de control e invisibles: nunca deben llegar al texto guardado. */
+const INVISIBLES = new RegExp('[\\u0000-\\u001F\\u007F\\u200B-\\u200D\\uFEFF]', 'g');
+const ID_RE = new RegExp('^[a-z0-9][a-z0-9-]{0,39}$');
+
+const LIMITES = {
+  categorias: 14,
+  productos: 80,
+  grupos: 14,
+  opciones: 14,
+  variantes: 6,
+  fotos: 40,
+  nombre: 60,
+  descripcion: 320,
+  nota: 240,
+  precioMax: 99999
+};
+
+const DIAS = [
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado'
+];
+
+
+function cleanText(value, max) {
+  if (typeof value !== 'string') return '';
+  return value.replace(INVISIBLES, '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+
+function slugify(value) {
+  return cleanText(value, 80)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(new RegExp('[\\u0300-\\u036f]', 'g'), '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+}
+
+function isId(value) {
+  return typeof value === 'string' && ID_RE.test(value);
+}
+
+
+function cleanPrice(value) {
+  const n = typeof value === 'number' ? value : Number(String(value ?? '').replace(',', '.'));
+  if (!Number.isFinite(n)) return null;
+  const acotado = Math.min(Math.max(n, 0), LIMITES.precioMax);
+  return { valor: Math.round(acotado * 100) / 100, ajustado: acotado !== n };
+}
+
+function cleanInt(value, min, max) {
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < min || n > max) return null;
+  return n;
+}
+
+/* ---------- horario ---------- */
+
+
+function prettyTime(minutes) {
+  const h24 = Math.floor(minutes / 60) % 24;
+  const m = minutes % 60;
+  const suf = h24 < 12 ? 'a.m.' : 'p.m.';
+  const h = h24 % 12 === 0 ? 12 : h24 % 12;
+  return `${h}:${String(m).padStart(2, '0')} ${suf}`;
+}
+
+
+function describeDays(days) {
+  const set = new Set(days);
+  if (!set.size) return '';
+  if (set.size === 7) return 'Todos los días';
+  /* Se empieza a contar en el primer día abierto cuyo anterior esté cerrado:
+     ahí arranca un tramo de verdad. */
+  let start = -1;
+  for (let d = 0; d < 7; d++) {
+    if (set.has(d) && !set.has((d + 6) % 7)) {
+      start = d;
+      break;
+    }
+  }
+  if (start < 0) start = [...set][0];
+  const runs = [];
+  let run = null;
+  for (let i = 0; i < 7; i++) {
+    const d = (start + i) % 7;
+    if (set.has(d)) {
+      if (run) run.push(d);
+      else run = [d];
+    } else if (run) {
+      runs.push(run);
+      run = null;
+    }
+  }
+  if (run) runs.push(run);
+  return runs
+    .map((r) =>
+      r.length === 1
+        ? DIAS[r[0]]
+        : r.length === 2
+          ? `${DIAS[r[0]]} y ${DIAS[r[1]].toLowerCase()}`
+          : `${DIAS[r[0]]} a ${DIAS[r[r.length - 1]].toLowerCase()}`
+    )
+    .join(', ');
+}
+
+
+function describeSchedule(schedule) {
+  if (!schedule || !schedule.days || !schedule.days.length) return [];
+  const abiertos = describeDays(schedule.days);
+  const cerrados = describeDays([0, 1, 2, 3, 4, 5, 6].filter((d) => !schedule.days.includes(d)));
+  const out = [
+    { days: abiertos, hours: `${prettyTime(schedule.from)} – ${prettyTime(schedule.to)}` }
+  ];
+  if (cerrados) out.push({ days: cerrados, hours: 'Cerrado' });
+  return out;
+}
+
+/* ---------- normalización del documento ---------- */
+
+
+function normalizeDoc(raw, opts = {}) {
+  const errors = [];
+  const imagenes = new Set(opts.images || []);
+  const src = raw && typeof raw === 'object' ? raw : {};
+  const add = (msg) => {
+    if (errors.length < 40) errors.push(msg);
+  };
+
+  /* --- negocio --- */
+  const b = src.business && typeof src.business === 'object' ? src.business : {};
+  const whatsapp = String(b.whatsapp ?? '').replace(/\D/g, '');
+  const phone = String(b.phone ?? '').replace(/\D/g, '');
+  const days = Array.isArray(b.schedule?.days)
+    ? [...new Set(b.schedule.days.map((d) => cleanInt(d, 0, 6)).filter((d) => d !== null))].sort()
+    : [];
+  let from = cleanInt(b.schedule?.from, 0, 1439);
+  let to = cleanInt(b.schedule?.to, 0, 2880);
+  /* Cerrar a la 1:00 significa la 1:00 del día siguiente, no un horario al
+     revés: muchos negocios de alitas cierran pasada la medianoche. */
+  if (from !== null && to !== null && to <= from) to += 1440;
+  if (from === null || to === null || to <= from || to - from > 1440) {
+    if (from !== null || to !== null)
+      add('Horario inválido: revisa la hora de apertura y la de cierre.');
+    from = null;
+    to = null;
+  }
+  const mapsUrl = typeof b.mapsUrl === 'string' && /^https:\/\//.test(b.mapsUrl)
+    ? cleanText(b.mapsUrl, 400)
+    : '';
+  if (b.mapsUrl && !mapsUrl) add('El enlace del mapa debe empezar por https://');
+  if (whatsapp && (whatsapp.length < 8 || whatsapp.length > 15))
+    add('El WhatsApp debe tener entre 8 y 15 dígitos, con la clave del país.');
+
+  const business = {
+    whatsapp: whatsapp.length >= 8 && whatsapp.length <= 15 ? whatsapp : '',
+    phone: phone.slice(0, 15),
+    address: cleanText(b.address, 200),
+    mapsUrl,
+    timeZone: cleanText(b.timeZone, 60) || 'America/Mexico_City',
+    schedule: from !== null && days.length ? { days, from, to } : null,
+    notice: cleanText(b.notice, 140)
+  };
+
+  /* --- fotos subidas desde el panel ---
+     El panel redimensiona y codifica en el navegador; aquí sólo se admite la
+     forma del manifiesto y rutas propias del sitio. */
+  const images = {};
+  const rawImages = src.images && typeof src.images === 'object' ? src.images : {};
+  for (const [slug, entry] of Object.entries(rawImages)) {
+    if (Object.keys(images).length >= LIMITES.fotos) break;
+    if (!isId(slug)) continue;
+    const variants = [];
+    for (const v of (Array.isArray(entry?.variants) ? entry.variants : []).slice(0, LIMITES.variantes)) {
+      const w = cleanInt(v?.w, 16, 4096);
+      const hgt = cleanInt(v?.h, 16, 4096);
+      const okSrc =
+        typeof v?.src === 'string' && new RegExp('^(img|api/foto)/[a-z0-9-]+\\.webp$').test(v.src);
+      if (w === null || hgt === null || !okSrc) continue;
+      variants.push({ w, h: hgt, src: v.src });
+    }
+    if (!variants.length) continue;
+    variants.sort((a, b) => a.w - b.w);
+    const ratio = Number(entry?.ratio);
+    images[slug] = {
+      ratio: Number.isFinite(ratio) && ratio > 0.2 && ratio < 5 ? Math.round(ratio * 1e4) / 1e4 : 4 / 3,
+      variants
+    };
+    imagenes.add(slug);
+  }
+
+  /* --- categorías --- */
+  const categories = [];
+  const catIds = new Set();
+  for (const c of Array.isArray(src.categories) ? src.categories : []) {
+    if (categories.length >= LIMITES.categorias) {
+      add(`Sólo caben ${LIMITES.categorias} categorías.`);
+      break;
+    }
+    const id = isId(c?.id) ? c.id : slugify(c?.name);
+    if (!id) {
+      add('Una categoría se quedó sin nombre y se descartó.');
+      continue;
+    }
+    if (catIds.has(id)) {
+      add(`Categoría repetida: ${id}`);
+      continue;
+    }
+    catIds.add(id);
+    categories.push({
+      id,
+      name: cleanText(c?.name, LIMITES.nombre) || id,
+      kicker: cleanText(c?.kicker, 32),
+      note: cleanText(c?.note, LIMITES.nota)
+    });
+  }
+
+  /* --- grupos de opciones --- */
+  const optionGroups = {};
+  const rawGroups = src.optionGroups && typeof src.optionGroups === 'object' ? src.optionGroups : {};
+  for (const [key, g] of Object.entries(rawGroups)) {
+    if (Object.keys(optionGroups).length >= LIMITES.grupos) {
+      add(`Sólo caben ${LIMITES.grupos} grupos de opciones.`);
+      break;
+    }
+    if (!isId(key)) {
+      add(`Grupo de opciones con clave inválida: ${String(key).slice(0, 20)}`);
+      continue;
+    }
+    const choices = [];
+    const seen = new Set();
+    for (const ch of Array.isArray(g?.choices) ? g.choices : []) {
+      if (choices.length >= LIMITES.opciones) break;
+      const id = isId(ch?.id) ? ch.id : slugify(ch?.label);
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      const delta = cleanPrice(ch?.priceDelta ?? 0);
+      const heat = cleanInt(ch?.heat, 0, 3);
+      choices.push({
+        id,
+        label: cleanText(ch?.label, LIMITES.nombre) || id,
+        priceDelta: delta === null ? 0 : delta.valor,
+        ...(heat === null ? {} : { heat })
+      });
+    }
+    if (!choices.length) {
+      add(`El grupo "${cleanText(g?.label, 40) || key}" se quedó sin opciones y se descartó.`);
+      continue;
+    }
+    optionGroups[key] = {
+      /* El id ES la clave, siempre. Cuando varios grupos compartían el id
+         "prep", elegir en dos de ellos en la misma ficha hacía que el segundo
+         borrara la respuesta del primero y la comanda llegaba incompleta. */
+      id: key,
+      label: cleanText(g?.label, LIMITES.nombre) || key,
+      hint: cleanText(g?.hint, 40),
+      type: g?.type === 'multi' ? 'multi' : 'single',
+      required: g?.required === true,
+      choices
+    };
+  }
+
+  /* --- productos --- */
+  const products = [];
+  const prodIds = new Set();
+  for (const p of Array.isArray(src.products) ? src.products : []) {
+    if (products.length >= LIMITES.productos) {
+      add(`Sólo caben ${LIMITES.productos} productos.`);
+      break;
+    }
+    const name = cleanText(p?.name, LIMITES.nombre);
+    if (!name) {
+      add('Un platillo sin nombre se descartó.');
+      continue;
+    }
+    let id = isId(p?.id) ? p.id : slugify(name);
+    if (!id) id = `p-${products.length + 1}`;
+    if (prodIds.has(id)) {
+      let n = 2;
+      while (prodIds.has(`${id}-${n}`)) n++;
+      id = `${id}-${n}`;
+    }
+    prodIds.add(id);
+    const price = cleanPrice(p?.basePrice);
+    if (price === null) {
+      add(`"${name}" tiene un precio inválido y se descartó.`);
+      prodIds.delete(id);
+      continue;
+    }
+    if (price.ajustado) add(`El precio de "${name}" se ajustó a $${price.valor}.`);
+    const categoryId = catIds.has(p?.categoryId) ? p.categoryId : categories[0]?.id;
+    if (!categoryId) {
+      add(`"${name}" no pertenece a ninguna categoría.`);
+      prodIds.delete(id);
+      continue;
+    }
+    if (p?.categoryId && !catIds.has(p.categoryId))
+      add(`"${name}" apuntaba a una categoría que no existe; se movió a "${categoryId}".`);
+    const image = typeof p?.image === 'string' && imagenes.has(p.image) ? p.image : null;
+    if (p?.image && !image) add(`La foto de "${name}" no existe; el platillo queda sin foto.`);
+    const rank = ['hero', 'featured', 'regular'].includes(p?.rank) ? p.rank : 'regular';
+    /* hasOwn y no `optionGroups[k]`: "constructor" o "toString" existen en
+       cualquier objeto y pasarían el filtro, dejando luego un grupo
+       inservible que rompe el catálogo en el teléfono del cliente. */
+    const groups = (Array.isArray(p?.optionGroups) ? p.optionGroups : []).filter(
+      (k) => typeof k === 'string' && Object.hasOwn(optionGroups, k)
+    );
+    products.push({
+      id,
+      categoryId,
+      rank,
+      name,
+      kicker: cleanText(p?.kicker, 24),
+      unit: cleanText(p?.unit, 24),
+      description: cleanText(p?.description, LIMITES.descripcion),
+      basePrice: price.valor,
+      image,
+      imageAlt: cleanText(p?.imageAlt, 160),
+      optionGroups: [...new Set(groups)],
+      available: p?.available !== false
+    });
+  }
+
+  const doc = {
+    schema: 1,
+    updatedAt: typeof src.updatedAt === 'string' ? src.updatedAt : new Date().toISOString(),
+    currency: cleanText(src.currency, 8) || 'MXN',
+    business,
+    categories,
+    optionGroups,
+    products,
+    images
+  };
+  return { doc, errors };
+}
+
+
+function visibleCategories(doc) {
+  return doc.categories.filter((c) => doc.products.some((p) => p.categoryId === c.id));
+}
+const DIAS_CORTOS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+/* Sólo 'hero' cambia cómo se ve el platillo; 'featured' y 'regular' se pintan
+   igual, así que ofrecer tres opciones era prometer algo que no pasa. */
+const RANGOS = [
+  { id: 'hero', label: 'Grande, con foto y descripción' },
+  { id: 'regular', label: 'Normal' }
+];
+const ANCHOS = [320, 560, 900];
+const CLAVE_BORRADOR = 'carbolitas.admin.borrador.v1';
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+function el(tag, props = {}, children = []) {
+  const [name, ...classes] = tag.split('.');
+  const node = document.createElement(name || 'div');
+  if (classes.length) node.className = classes.join(' ');
+  for (const [k, v] of Object.entries(props)) {
+    if (v === null || v === undefined || v === false) continue;
+    if (k === 'text') node.textContent = String(v);
+    else if (k === 'on') for (const [ev, fn] of Object.entries(v)) node.addEventListener(ev, fn);
+    else if (k === 'dataset') Object.assign(node.dataset, v);
+    else if (k === 'value') node.value = v;
+    else node.setAttribute(k, v === true ? '' : String(v));
+  }
+  for (const c of [].concat(children)) {
+    if (c === null || c === undefined || c === false) continue;
+    node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  }
+  return node;
+}
+const vaciar = (n) => {
+  while (n.firstChild) n.removeChild(n.firstChild);
+};
+
+
+function sinSaltar(fn) {
+  const y = window.scrollY;
+  fn();
+  if (Math.abs(window.scrollY - y) > 2) window.scrollTo({ top: y, behavior: 'instant' });
+}
+const pesos = (n) => {
+  const v = Number(n) || 0;
+  return `$${v.toLocaleString('es-MX', {
+    minimumFractionDigits: v % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2
+  })}`;
+};
+
+/* ==================================================================
+   estado
+   ================================================================== */
+
+const estado = {
+  doc: null,
+  base: null,
+  modo: 'local', // 'live' | 'local'
+  token: '',
+  cartaPrecargada: null,
+  sucio: false,
+  abiertos: new Set(),
+  slugsBase: []
+};
+
+function marcarSucio(si = true) {
+  estado.sucio = si;
+  const bar = $('#bar-state');
+  bar.textContent = '';
+  bar.append(
+    el('b', { text: si ? 'Hay cambios sin publicar' : 'Todo publicado' }),
+    el('span', {
+      text: si
+        ? estado.modo === 'live'
+          ? 'Los clientes ven la carta anterior.'
+          : 'Descarga el archivo y súbelo al sitio.'
+        : `Publicado ${fecha(estado.doc?.updatedAt)}`
+    })
+  );
+  $('#publicar').disabled = !si;
+  if (si) guardarBorrador();
+}
+
+function fecha(iso) {
+  if (!iso) return 'nunca';
+  try {
+    return new Date(iso).toLocaleString('es-MX', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch {
+    return iso;
+  }
+}
+
+
+let borradorTimer = 0;
+function guardarBorrador() {
+  clearTimeout(borradorTimer);
+  borradorTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(CLAVE_BORRADOR, JSON.stringify(estado.doc));
+    } catch {
+      /* sin almacenamiento el panel sigue funcionando, sólo sin red de seguridad */
+    }
+  }, 500);
+}
+function borrarBorrador() {
+  /* Se cancela el guardado aplazado: si no, volvería a escribir el borrador
+     medio segundo después de haberlo borrado. */
+  clearTimeout(borradorTimer);
+  try {
+    localStorage.removeItem(CLAVE_BORRADOR);
+  } catch {
+    /* nada que borrar */
+  }
+}
+
+let toastTimer = 0;
+function toast(texto) {
+  const t = $('#toast');
+  t.textContent = texto;
+  t.dataset.on = 'true';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (t.dataset.on = 'false'), 2800);
+}
+
+function aviso(tipo, texto, lista) {
+  const box = $('#aviso');
+  box.className = `msg msg--${tipo}`;
+  vaciar(box);
+  box.append(el('span', { text: texto }));
+  if (lista && lista.length) {
+    box.append(el('ul', {}, lista.map((t) => el('li', { text: t }))));
+  }
+  box.hidden = false;
+  box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+const limpiarAviso = () => ($('#aviso').hidden = true);
+
+/* ==================================================================
+   red
+   ================================================================== */
+
+
+function enEspanol(mensaje) {
+  const texto = String(mensaje || '');
+  if (/Failed to fetch|NetworkError|Load failed/i.test(texto)) {
+    return 'No se pudo conectar con el sitio. Revisa tu conexión y vuelve a intentarlo; tus cambios siguen aquí.';
+  }
+  if (/^Error 5\d\d$/.test(texto)) {
+    return 'El sitio no respondió bien. Espera un momento y vuelve a intentarlo.';
+  }
+  if (/^Error 40\d$/.test(texto)) return 'La sesión ya no es válida. Vuelve a entrar.';
+  return texto;
+}
+
+async function pedir(ruta, opciones = {}) {
+  const res = await fetch(ruta, {
+    ...opciones,
+    headers: {
+      'content-type': 'application/json',
+      ...(estado.token ? { authorization: `Bearer ${estado.token}` } : {}),
+      ...(opciones.headers || {})
+    }
+  });
+  let data = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+  if (!res.ok) throw new Error(data?.error || `Error ${res.status}`);
+  return data;
+}
+
+
+async function detectarModo() {
+  try {
+    const res = await fetch('carta.json', { cache: 'no-store' });
+    if (res.ok && res.headers.get('x-carbolitas-panel') === '1') {
+      estado.modo = 'live';
+      estado.cartaPrecargada = await res.json();
+      return;
+    }
+    if (res.ok) estado.cartaPrecargada = await res.json();
+  } catch {
+    /* sin red: modo local */
+  }
+  estado.modo = 'local';
+}
+
+/* ==================================================================
+   carga
+   ================================================================== */
+
+async function cargarCarta() {
+  if (estado.cartaPrecargada) {
+    const d = estado.cartaPrecargada;
+    return Array.isArray(d?.products) ? d : d?.doc || null;
+  }
+  try {
+    const res = await fetch('carta.json', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      const crudo = Array.isArray(data?.products) ? data : data?.doc;
+      if (crudo) return crudo;
+    }
+  } catch {
+    /* se intenta con el respaldo */
+  }
+  try {
+    const res = await fetch('carta-base.json', { cache: 'no-store' });
+    if (res.ok) return await res.json();
+  } catch {
+    /* nada que cargar */
+  }
+  return null;
+}
+
+function slugsDisponibles() {
+  return [...new Set([...estado.slugsBase, ...Object.keys(estado.doc.images || {})])];
+}
+
+function renormalizar() {
+  const { doc, errors } = normalizeDoc(estado.doc, { images: slugsDisponibles() });
+  estado.doc = doc;
+  return errors;
+}
+
+/* ==================================================================
+   pestaña: platillos
+   ================================================================== */
+
+function campo(label, input, ayuda) {
+  return el('div.f', {}, [el('label', { text: label }), input, ayuda ? el('small', { text: ayuda }) : null]);
+}
+
+function entrada(valor, onInput, extra = {}) {
+  return el('input', {
+    value: valor ?? '',
+    ...extra,
+    on: { input: (e) => onInput(e.target.value) }
+  });
+}
+
+function pintarPlatillos() {
+  sinSaltar(() => repintarPlatillos());
+}
+
+function repintarPlatillos() {
+  const cont = $('#lista-platillos');
+  vaciar(cont);
+  const cats = estado.doc.categories;
+
+  for (const cat of cats) {
+    const delCat = estado.doc.products.filter((p) => p.categoryId === cat.id);
+    const grupo = el('section.catgroup', { dataset: { catgroup: cat.id } }, [
+      el('h3', { text: cat.name })
+    ]);
+    if (!delCat.length) {
+      grupo.append(el('p.sec', { text: 'Sin platillos todavía.' }));
+    }
+    delCat.forEach((prod, i) => grupo.append(tarjetaProducto(prod, i, delCat.length)));
+    grupo.append(
+      el(
+        'button.btn.btn-add-cat',
+        {
+          type: 'button',
+          on: {
+            click: () => {
+              const nuevo = {
+                id: `nuevo-${Date.now().toString(36)}`,
+                categoryId: cat.id,
+                rank: 'regular',
+                name: 'Platillo nuevo',
+                kicker: '',
+                unit: '',
+                description: '',
+                basePrice: 0,
+                image: null,
+                imageAlt: '',
+                optionGroups: [],
+                available: true
+              };
+              estado.doc.products.push(nuevo);
+              estado.abiertos.add(nuevo.id);
+              marcarSucio();
+              pintarPlatillos();
+              const campoNombre = $(`[data-card="${nuevo.id}"] input`);
+              if (campoNombre) {
+                campoNombre.focus();
+                campoNombre.select();
+              }
+            }
+          }
+        },
+        [`+ Agregar a ${cat.name}`]
+      )
+    );
+    cont.append(grupo);
+  }
+}
+
+function tarjetaProducto(prod, indice, total) {
+  const abierto = estado.abiertos.has(prod.id);
+  const cuerpo = el('div.card__body', { hidden: !abierto });
+
+  const tarjeta = el(`div.card${prod.available === false ? '.card--off' : ''}`, {
+    dataset: { card: prod.id }
+  });
+
+  const mover = (paso) => {
+    const hermanos = estado.doc.products.filter((p) => p.categoryId === prod.categoryId);
+    const destino = hermanos[indice + paso];
+    if (!destino) return;
+    const a = estado.doc.products.indexOf(prod);
+    const b = estado.doc.products.indexOf(destino);
+    estado.doc.products[a] = destino;
+    estado.doc.products[b] = prod;
+    marcarSucio();
+    pintarPlatillos();
+  };
+
+  const titulo = el('button.card__title', {
+    type: 'button',
+    'aria-expanded': String(abierto),
+    on: {
+      click: () => {
+        if (estado.abiertos.has(prod.id)) estado.abiertos.delete(prod.id);
+        else estado.abiertos.add(prod.id);
+        pintarPlatillos();
+      }
+    }
+  }, [
+    el('b', { text: prod.name }),
+    el('span', {
+      text: [prod.unit, prod.available === false ? 'Agotado' : null].filter(Boolean).join(' · ') || ' '
+    })
+  ]);
+
+  tarjeta.append(
+    el('div.card__head', {}, [
+      titulo,
+      el('span.card__price', { text: pesos(prod.basePrice) }),
+      el(
+        'button.stock',
+        {
+          type: 'button',
+          'aria-pressed': String(prod.available !== false),
+          'aria-label': `${prod.name}: ${
+            prod.available === false ? 'agotado, tocar para reponer' : 'disponible, tocar para agotar'
+          }`,
+          on: { click: () => alternarExistencia(prod) }
+        },
+        [el('span.stock__txt', { text: prod.available === false ? 'Se acabó' : 'Sí hay' })]
+      ),
+      el('span.chev', { 'aria-hidden': 'true', text: abierto ? '▲' : '▼' })
+    ]),
+    cuerpo
+  );
+
+  if (!abierto) return tarjeta;
+
+  const rejilla = el('div.grid2');
+  rejilla.append(
+    campo(
+      'Nombre',
+      entrada(
+        prod.name,
+        (v) => {
+          prod.name = v;
+          titulo.firstChild.textContent = v || 'Sin nombre';
+          tarjeta.classList.toggle('card--mal', !v.trim());
+          marcarSucio();
+        },
+        { maxlength: 60, 'aria-label': 'Nombre del platillo' }
+      ),
+      'Sin nombre no se puede publicar.'
+    ),
+    campo(
+      'Precio',
+      entrada(
+        prod.basePrice,
+        (v) => {
+          /* Texto y no number: el teclado numérico en español ofrece coma, y
+             <input type=number> la descarta en silencio, así que "30,50"
+             llegaba como 3050. Aquí la coma y el punto valen igual. */
+          const n = Number(String(v).replace(',', '.').replace(/[^\d.]/g, ''));
+          prod.basePrice = Number.isFinite(n) && n >= 0 ? n : 0;
+          $('.card__price', tarjeta).textContent = pesos(prod.basePrice);
+          marcarSucio();
+        },
+        { type: 'text', inputmode: 'decimal', maxlength: 9, 'aria-label': 'Precio en pesos' }
+      ),
+      'En pesos, sin el signo. Se pueden poner centavos: 99.50'
+    ),
+    campo(
+      'Medida',
+      entrada(prod.unit, (v) => {
+        prod.unit = v;
+        marcarSucio();
+      }, { maxlength: 24, placeholder: '7 piezas, orden…' }),
+      'Se lee debajo del nombre. Déjalo vacío si no aplica.'
+    ),
+    campo(
+      'Etiqueta',
+      entrada(prod.kicker, (v) => {
+        prod.kicker = v;
+        marcarSucio();
+      }, { maxlength: 24, placeholder: 'La casa, Doble carne…' }),
+      'Aparece sobre la foto en los platillos grandes y en la ficha del platillo.'
+    ),
+    campo(
+      'Categoría',
+      selector(
+        estado.doc.categories.map((c) => ({ id: c.id, label: c.name })),
+        prod.categoryId,
+        (v) => {
+          prod.categoryId = v;
+          marcarSucio();
+          pintarPlatillos();
+          toast(`Movido a ${estado.doc.categories.find((c) => c.id === v)?.name || v}`);
+        }
+      )
+    ),
+    campo(
+      'Tamaño en la carta',
+      selector(RANGOS, prod.rank, (v) => {
+        prod.rank = v;
+        marcarSucio();
+      }),
+      'Destacado grande ocupa el ancho completo y muestra la descripción.'
+    )
+  );
+
+  const desc = el('textarea', {
+    maxlength: 320,
+    value: prod.description,
+    on: {
+      input: (e) => {
+        prod.description = e.target.value;
+        marcarSucio();
+      }
+    }
+  });
+  rejilla.append(el('div.f.full', {}, [el('label', { text: 'Descripción' }), desc]));
+  cuerpo.append(rejilla);
+
+  cuerpo.append(bloqueFoto(prod));
+  cuerpo.append(bloqueOpciones(prod));
+
+  cuerpo.append(
+    el('div.f', {}, [
+      el('label', { text: 'Orden dentro de la categoría' }),
+      el('div.row', {}, [
+        el('button.btn', {
+          type: 'button',
+          text: '↑  Subir',
+          disabled: indice === 0,
+          on: { click: () => mover(-1) }
+        }),
+        el('button.btn', {
+          type: 'button',
+          text: '↓  Bajar',
+          disabled: indice === total - 1,
+          on: { click: () => mover(1) }
+        }),
+        el('span.orden', { text: `${indice + 1} de ${total}` })
+      ]),
+      el('small', { text: 'Lo primero de la primera categoría es lo primero que ve el cliente.' })
+    ])
+  );
+
+  cuerpo.append(
+    el('div.row', {}, [
+      el(
+        'button.switch.switch--stock',
+        {
+          type: 'button',
+          'aria-pressed': String(prod.available !== false),
+          on: { click: () => alternarExistencia(prod) }
+        },
+        [prod.available === false ? 'Agotado' : 'Disponible']
+      ),
+      el('span.spacer'),
+      el(
+        'button.btn.btn--danger',
+        {
+          type: 'button',
+          on: {
+            click: () => {
+              if (!confirm(`¿Quitar "${prod.name}" de la carta?`)) return;
+              estado.doc.products = estado.doc.products.filter((p) => p !== prod);
+              marcarSucio();
+              pintarPlatillos();
+              toast('Platillo quitado. Publica para que se note.');
+            }
+          }
+        },
+        ['Quitar de la carta']
+      )
+    ])
+  );
+
+  return tarjeta;
+}
+
+
+function alternarExistencia(prod) {
+  prod.available = prod.available === false;
+  marcarSucio();
+  const tarjeta = $(`[data-card="${prod.id}"]`);
+  if (tarjeta) {
+    tarjeta.classList.toggle('card--off', prod.available === false);
+    const dot = $('.stock', tarjeta);
+    if (dot) {
+      dot.setAttribute('aria-pressed', String(prod.available !== false));
+      $('.stock__txt', dot).textContent = prod.available === false ? 'Se acabó' : 'Sí hay';
+    }
+    const interruptor = $('.switch--stock', tarjeta);
+    if (interruptor) {
+      interruptor.setAttribute('aria-pressed', String(prod.available !== false));
+      interruptor.textContent = prod.available === false ? 'Agotado' : 'Disponible';
+    }
+  } else {
+    pintarPlatillos();
+  }
+  toast(prod.available ? `${prod.name}: vuelve a la carta` : `${prod.name}: agotado`);
+}
+
+function selector(opciones, valor, onChange) {
+  return el(
+    'select',
+    { on: { change: (e) => onChange(e.target.value) } },
+    opciones.map((o) =>
+      el('option', { value: o.id, selected: o.id === valor ? true : null, text: o.label })
+    )
+  );
+}
+
+
+function usadoPor(clave) {
+  const nombres = estado.doc.products
+    .filter((p) => p.optionGroups.includes(clave))
+    .map((p) => p.name);
+  if (!nombres.length) return 'sin platillos';
+  return nombres.length > 3 ? `${nombres.slice(0, 3).join(', ')}…` : nombres.join(', ');
+}
+
+function bloqueOpciones(prod) {
+  const claves = Object.keys(estado.doc.optionGroups);
+  if (!claves.length) return el('div');
+  return el('div.f', {}, [
+    el('label', { text: 'Preguntas al pedir' }),
+    el(
+      'div.row',
+      {},
+      claves.map((k) => {
+        const g = estado.doc.optionGroups[k];
+        const puesto = prod.optionGroups.includes(k);
+        return el(
+          'button.switch',
+          {
+            type: 'button',
+            'aria-pressed': String(puesto),
+            title: `Se usa en: ${usadoPor(k)}`,
+            on: {
+              click: (e) => {
+                const on = prod.optionGroups.includes(k);
+                prod.optionGroups = on
+                  ? prod.optionGroups.filter((x) => x !== k)
+                  : [...prod.optionGroups, k];
+                e.currentTarget.setAttribute('aria-pressed', String(!on));
+                marcarSucio();
+              }
+            }
+          },
+          [`${g.label} · ${usadoPor(k)}`]
+        );
+      })
+    ),
+    el('small', {
+      text: 'Lo que el cliente elige antes de agregar el platillo. El texto en gris dice en qué platillos se usa cada uno.'
+    })
+  ]);
+}
+
+function bloqueFoto(prod) {
+  const entry = (estado.doc.images || {})[prod.image] || null;
+  const src = entry
+    ? entry.variants[0].src
+    : prod.image
+      ? `img/${prod.image}-320.webp`
+      : null;
+
+  const vista = src
+    ? el('img.foto__thumb', { src, alt: '', width: 88, height: 66 })
+    : el('div.foto__none', { text: 'Sin foto' });
+
+  const file = el('input', {
+    type: 'file',
+    accept: 'image/*',
+    class: 'sr-only',
+    id: `foto-${prod.id}`,
+    on: { change: (e) => subirFoto(prod, e.target.files?.[0]) }
+  });
+
+  const acciones = el('div.row', {}, [
+    el('label.btn', { for: `foto-${prod.id}`, text: 'Cambiar foto' }),
+    prod.image
+      ? el('button.btn.btn--ghost', {
+          type: 'button',
+          text: 'Quitar foto',
+          on: {
+            click: () => {
+              prod.image = null;
+              marcarSucio();
+              pintarPlatillos();
+            }
+          }
+        })
+      : null
+  ]);
+
+  return el('div.f', {}, [
+    el('label', { text: 'Foto' }),
+    el('div.foto', {}, [vista, el('div', {}, [acciones, file])]),
+    el('small', {
+      text:
+        estado.modo === 'live'
+          ? 'Se recorta a 4:3 y se reduce en tu teléfono antes de subirse: pesa poco y carga rápido.'
+          : 'Aquí sólo puedes elegir entre las fotos que ya trae la carta.'
+    }),
+    selectorFotoExistente(prod)
+  ]);
+}
+
+function selectorFotoExistente(prod) {
+  /* Los identificadores de foto no le dicen nada a nadie: se muestran por el
+     platillo que ya las usa. */
+  const nombrePorSlug = new Map();
+  for (const p of estado.doc.products) {
+    if (p.image && !nombrePorSlug.has(p.image)) nombrePorSlug.set(p.image, p.name);
+  }
+  const opciones = [{ id: '', label: 'Sin foto' }].concat(
+    slugsDisponibles()
+      .filter((s) => !['logo', 'portada', 'portada-alta', 'local'].includes(s))
+      .map((s) => ({ id: s, label: nombrePorSlug.get(s) ? `Foto de ${nombrePorSlug.get(s)}` : s }))
+  );
+  return selector(opciones, prod.image || '', (v) => {
+    prod.image = v || null;
+    marcarSucio();
+    pintarPlatillos();
+  });
+}
+
+/* --- redimensionado en el navegador --- */
+
+async function subirFoto(prod, archivo) {
+  if (!archivo) return;
+  if (estado.modo !== 'live') {
+    aviso(
+      'warn',
+      'Para subir fotos nuevas, el sitio tiene que estar publicado con el panel en vivo. Mientras tanto puedes elegir una de las fotos que ya trae la carta.'
+    );
+    return;
+  }
+  if (!estado.token) {
+    aviso('bad', 'Entra con la contraseña antes de subir fotos.');
+    return;
+  }
+  try {
+    toast('Preparando la foto…');
+    const bitmap = await cargarImagen(archivo);
+    const variants = [];
+    for (const w of ANCHOS) {
+      const v = await recortar(bitmap, w);
+      if (v) variants.push(v);
+    }
+    if (!variants.length) throw new Error('No se pudo procesar la imagen.');
+    const slug = `${slugify(prod.name) || 'foto'}-${Date.now().toString(36)}`.slice(0, 40);
+    const r = await pedir('api/foto', {
+      method: 'POST',
+      body: JSON.stringify({ slug, variants })
+    });
+    estado.doc.images = estado.doc.images || {};
+    estado.doc.images[r.slug] = r.entry;
+    prod.image = r.slug;
+    prod.imageAlt = prod.imageAlt || `Foto de ${prod.name}`;
+    marcarSucio();
+    pintarPlatillos();
+    toast('Foto lista. Publica para que se vea.');
+  } catch (err) {
+    aviso('bad', `No se pudo subir la foto: ${err.message}`);
+  }
+}
+
+function cargarImagen(archivo) {
+  if (typeof createImageBitmap === 'function') return createImageBitmap(archivo);
+  return new Promise((ok, no) => {
+    const img = new Image();
+    img.onload = () => ok(img);
+    img.onerror = () => no(new Error('formato no reconocido'));
+    img.src = URL.createObjectURL(archivo);
+  });
+}
+
+
+async function recortar(bitmap, ancho) {
+  const alto = Math.round((ancho * 3) / 4);
+  const sw = bitmap.width;
+  const sh = bitmap.height;
+  if (!sw || !sh) return null;
+  let cw = sw;
+  let ch = Math.round((sw * 3) / 4);
+  if (ch > sh) {
+    ch = sh;
+    cw = Math.round((sh * 4) / 3);
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = ancho;
+  canvas.height = alto;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(bitmap, Math.round((sw - cw) / 2), Math.round((sh - ch) / 2), cw, ch, 0, 0, ancho, alto);
+  const blob = await new Promise((r) => canvas.toBlob(r, 'image/webp', 0.78));
+  if (!blob || blob.type !== 'image/webp') return null;
+  const buf = await blob.arrayBuffer();
+  let bin = '';
+  const bytes = new Uint8Array(buf);
+  for (let i = 0; i < bytes.length; i += 1) bin += String.fromCharCode(bytes[i]);
+  return { w: ancho, h: alto, data: btoa(bin) };
+}
+
+/* ==================================================================
+   pestaña: categorías
+   ================================================================== */
+
+function pintarCategorias() {
+  sinSaltar(() => repintarCategorias());
+}
+
+function repintarCategorias() {
+  const cont = $('#lista-categorias');
+  vaciar(cont);
+  estado.doc.categories.forEach((cat, i) => {
+    const usados = estado.doc.products.filter((p) => p.categoryId === cat.id).length;
+    const cuerpo = el('div.card__body', {}, [
+      el('div.grid2', {}, [
+        campo('Nombre', entrada(cat.name, (v) => {
+          cat.name = v;
+          marcarSucio();
+          $('b', tarjeta).textContent = v;
+          /* La pestaña de platillos agrupa por categoría: si no se actualiza
+             aquí, se queda con el nombre viejo y parece que no se guardó. */
+          const encabezado = $(`[data-catgroup="${cat.id}"] h3`);
+          if (encabezado) encabezado.textContent = v || 'Sin nombre';
+          const agregar = $(`[data-catgroup="${cat.id}"] .btn-add-cat`);
+          if (agregar) agregar.textContent = `+ Agregar a ${v || 'esta categoría'}`;
+        }, { maxlength: 60 })),
+        campo('Etiqueta', entrada(cat.kicker, (v) => {
+          cat.kicker = v;
+          marcarSucio();
+        }, { maxlength: 32, placeholder: 'Al carbón, Sin hueso…' })),
+        el('div.f.full', {}, [
+          el('label', { text: 'Nota' }),
+          el('textarea', {
+            maxlength: 240,
+            value: cat.note,
+            on: {
+              input: (e) => {
+                cat.note = e.target.value;
+                marcarSucio();
+              }
+            }
+          }),
+          el('small', { text: 'Línea explicativa debajo del título de la sección.' })
+        ])
+      ]),
+      el('div.row.row--end', {}, [
+        usados > 0
+          ? el('small', {
+              text: `Para quitar esta categoría, primero mueve o quita sus ${usados} platillo${
+                usados === 1 ? '' : 's'
+              }.`
+            })
+          : null,
+        el('button.btn.btn--danger', {
+          type: 'button',
+          disabled: usados > 0,
+          text: 'Quitar categoría',
+          on: {
+            click: () => {
+              if (usados > 0) return;
+              if (!confirm(`¿Quitar la categoría "${cat.name}" de la carta?`)) return;
+              estado.doc.categories = estado.doc.categories.filter((c) => c !== cat);
+              marcarSucio();
+              pintarCategorias();
+            }
+          }
+        })
+      ])
+    ]);
+
+    const mover = (paso) => {
+      const j = i + paso;
+      if (j < 0 || j >= estado.doc.categories.length) return;
+      const arr = estado.doc.categories;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      marcarSucio();
+      pintarCategorias();
+    };
+
+    const tarjeta = el('div.card', {}, [
+      el('div.card__head', {}, [
+        el('div.card__grab', {}, [
+          el('button', {
+            type: 'button',
+            text: '▲',
+            'aria-label': `Subir ${cat.name}`,
+            disabled: i === 0,
+            on: { click: () => mover(-1) }
+          }),
+          el('button', {
+            type: 'button',
+            text: '▼',
+            'aria-label': `Bajar ${cat.name}`,
+            disabled: i === estado.doc.categories.length - 1,
+            on: { click: () => mover(1) }
+          })
+        ]),
+        el('div.card__title', {}, [
+          el('b', { text: cat.name }),
+          el('span', { text: `${usados} platillo${usados === 1 ? '' : 's'}` })
+        ])
+      ]),
+      cuerpo
+    ]);
+    cont.append(tarjeta);
+  });
+
+  cont.append(
+    el('button.btn', {
+      type: 'button',
+      text: '+ Agregar categoría',
+      on: {
+        click: () => {
+          estado.doc.categories.push({
+            id: `cat-${Date.now().toString(36)}`,
+            name: 'Categoría nueva',
+            kicker: '',
+            note: ''
+          });
+          marcarSucio();
+          pintarCategorias();
+        }
+      }
+    })
+  );
+}
+
+/* ==================================================================
+   pestaña: salsas y opciones
+   ================================================================== */
+
+function pintarOpciones() {
+  const cont = $('#lista-opciones');
+  vaciar(cont);
+  for (const [clave, grupo] of Object.entries(estado.doc.optionGroups)) {
+    const lista = el('div', {}, []);
+    const repintar = () => {
+      vaciar(lista);
+      grupo.choices.forEach((ch, i) => {
+        lista.append(
+          el('div.row', {}, [
+            el('div.grow', {}, [
+              entrada(ch.label, (v) => {
+                ch.label = v;
+                marcarSucio();
+              }, { maxlength: 60, 'aria-label': 'Nombre de la opción' })
+            ]),
+            grupo.id === 'salsa'
+              ? el('div.f.narrow', {}, [
+                  selector(
+                    [
+                      { id: '0', label: 'Sin picor' },
+                      { id: '1', label: 'Picor 1' },
+                      { id: '2', label: 'Picor 2' },
+                      { id: '3', label: 'Picor 3' }
+                    ],
+                    String(ch.heat ?? 0),
+                    (v) => {
+                      ch.heat = Number(v);
+                      marcarSucio();
+                    }
+                  )
+                ])
+              : null,
+            el('button.btn.btn--danger', {
+              type: 'button',
+              text: 'Quitar',
+              disabled: grupo.choices.length <= 1,
+              on: {
+                click: () => {
+                  if (!confirm(`¿Quitar "${ch.label}" de "${grupo.label}"?`)) return;
+                  grupo.choices.splice(i, 1);
+                  marcarSucio();
+                  repintar();
+                }
+              }
+            })
+          ])
+        );
+      });
+      lista.append(
+        el('button.btn', {
+          type: 'button',
+          text: '+ Agregar opción',
+          on: {
+            click: () => {
+              grupo.choices.push({
+                id: `op-${Date.now().toString(36)}`,
+                label: 'Opción nueva',
+                priceDelta: 0,
+                ...(grupo.id === 'salsa' ? { heat: 0 } : {})
+              });
+              marcarSucio();
+              repintar();
+            }
+          }
+        })
+      );
+    };
+    repintar();
+
+    cont.append(
+      el('div.card', {}, [
+        el('div.card__head', {}, [
+          el('div.card__title', {}, [
+            el('b', { text: grupo.label }),
+            el('span', {
+              text: `${grupo.type === 'single' ? 'Elige una' : 'Puede elegir varias'}${
+                grupo.required ? ' · obligatorio' : ''
+              } · ${usadoPor(clave)}`
+            })
+          ])
+        ]),
+        el('div.card__body', {}, [
+          campo(
+            'Cómo se titula en la ficha',
+            entrada(grupo.label, (v) => {
+              grupo.label = v;
+              marcarSucio();
+            }, { maxlength: 60 })
+          ),
+          el('div.f', {}, [el('label', { text: 'Opciones' }), lista])
+        ])
+      ])
+    );
+  }
+}
+
+/* ==================================================================
+   pestaña: negocio
+   ================================================================== */
+
+function pintarNegocio() {
+  const cont = $('#form-negocio');
+  vaciar(cont);
+  const b = estado.doc.business;
+
+  const horaInput = (valor, onChange) =>
+    el('input', {
+      type: 'time',
+      value: `${String(Math.floor(valor / 60)).padStart(2, '0')}:${String(valor % 60).padStart(2, '0')}`,
+      on: {
+        change: (e) => {
+          const [h, m] = String(e.target.value || '').split(':').map(Number);
+          if (Number.isFinite(h) && Number.isFinite(m)) onChange(h * 60 + m);
+          marcarSucio();
+        }
+      }
+    });
+
+  b.schedule = b.schedule || { days: [], from: 18 * 60, to: 22 * 60 };
+
+  const resumen = el('small', {});
+  const refrescarResumen = () => {
+    const lineas = describeSchedule(b.schedule);
+    resumen.textContent = lineas.length
+      ? lineas.map((l) => `${l.days}: ${l.hours}`).join('   ·   ')
+      : 'Sin días marcados no se muestra horario en la carta.';
+  };
+
+  cont.append(
+    el('div.grid2', {}, [
+      campo(
+        'WhatsApp para pedidos',
+        entrada(b.whatsapp, (v) => {
+          b.whatsapp = v.replace(/\D/g, '');
+          marcarSucio();
+        }, { inputmode: 'numeric', maxlength: 15 }),
+        'Con clave de país y sin espacios. México: 52 + LADA + número.'
+      ),
+      campo(
+        'Teléfono que se muestra',
+        entrada(b.phone, (v) => {
+          b.phone = v.replace(/\D/g, '');
+          marcarSucio();
+        }, { inputmode: 'numeric', maxlength: 15 }),
+        'Los 10 dígitos locales. Es el que aparece escrito en la carta.'
+      ),
+      el('div.f.full', {}, [
+        el('label', { text: 'Dirección' }),
+        entrada(b.address, (v) => {
+          b.address = v;
+          marcarSucio();
+        }, { maxlength: 200 })
+      ]),
+      el('div.f.full', {}, [
+        el('label', { text: 'Enlace de Google Maps' }),
+        entrada(b.mapsUrl, (v) => {
+          b.mapsUrl = v.trim();
+          marcarSucio();
+        }, { maxlength: 400, placeholder: 'https://maps.app.goo.gl/…' }),
+        el('small', { text: 'Tiene que empezar por https://' })
+      ]),
+      el('div.f.full', {}, [
+        el('label', { text: 'Aviso del día' }),
+        entrada(b.notice, (v) => {
+          b.notice = v;
+          marcarSucio();
+        }, { maxlength: 140, placeholder: 'Hoy cerramos a las 9:30' }),
+        el('small', { text: 'Sale arriba de la carta, resaltado. Déjalo vacío para quitarlo.' })
+      ])
+    ])
+  );
+
+  cont.append(
+    el('h2.sec', { text: 'Horario' }),
+    el('p.sec', {
+      text: 'Marca los días que abres. La carta usa esto para decir si está abierto ahora mismo.'
+    }),
+    el(
+      'div.dias',
+      {},
+      DIAS_CORTOS.map((nombre, d) =>
+        el(
+          'button.dia',
+          {
+            type: 'button',
+            'aria-pressed': String(b.schedule.days.includes(d)),
+            on: {
+              click: (e) => {
+                const on = b.schedule.days.includes(d);
+                b.schedule.days = on
+                  ? b.schedule.days.filter((x) => x !== d)
+                  : [...b.schedule.days, d].sort();
+                e.currentTarget.setAttribute('aria-pressed', String(!on));
+                marcarSucio();
+                refrescarResumen();
+              }
+            }
+          },
+          [nombre]
+        )
+      )
+    ),
+    el('div.grid2.mt', {}, [
+      campo('Abre', horaInput(b.schedule.from, (v) => {
+        b.schedule.from = v;
+        refrescarResumen();
+      })),
+      campo('Cierra', horaInput(b.schedule.to, (v) => {
+        b.schedule.to = v;
+        refrescarResumen();
+      }))
+    ]),
+    el('div.f', {}, [el('label', { text: 'Así se leerá' }), resumen])
+  );
+  refrescarResumen();
+}
+
+/* ==================================================================
+   pestaña: respaldo
+   ================================================================== */
+
+function pintarRespaldo() {
+  const cont = $('#form-respaldo');
+  vaciar(cont);
+  cont.append(
+    el('p.sec', {
+      text:
+        'Descarga una copia antes de cambios grandes. El archivo es la carta completa: si algo sale mal, lo vuelves a cargar aquí y publicas.'
+    }),
+    el('div.row', {}, [
+      el('button.btn', { type: 'button', text: 'Descargar carta.json', on: { click: descargar } }),
+      el('label.btn', { for: 'importar', text: 'Cargar un archivo' }),
+      el('input', {
+        type: 'file',
+        id: 'importar',
+        accept: 'application/json,.json',
+        class: 'sr-only',
+        on: { change: (e) => importar(e.target.files?.[0]) }
+      })
+    ]),
+    el('h2.sec', { text: 'Deshacer' }),
+    el('p.sec', {
+      text: 'Dos formas de volver atrás, según lo lejos que quieras ir.'
+    }),
+    el('div.row', {}, [
+      el('button.btn', {
+        type: 'button',
+        text: 'Descartar lo que no he publicado',
+        on: {
+          click: () => {
+            if (!confirm('¿Descartar los cambios que todavía no has publicado?')) return;
+            estado.doc = JSON.parse(JSON.stringify(estado.base));
+            borrarBorrador();
+            pintarTodo();
+            marcarSucio(false);
+            toast('Cambios descartados.');
+          }
+        }
+      }),
+      el('button.btn.btn--danger', {
+        type: 'button',
+        text: 'Volver a la carta de fábrica',
+        on: {
+          click: async () => {
+            if (
+              !confirm(
+                '¿Volver a la carta con la que se creó el sitio? Se perderán los precios y platillos que hayas publicado desde entonces.'
+              )
+            )
+              return;
+            try {
+              const res = await fetch('carta-base.json', { cache: 'no-store' });
+              if (!res.ok) throw new Error('no se encontró la carta de fábrica');
+              const r = normalizeDoc(await res.json(), { images: estado.slugsBase });
+              if (!r.doc.products.length) throw new Error('la carta de fábrica llegó vacía');
+              estado.doc = r.doc;
+              pintarTodo();
+              marcarSucio();
+              toast('Carta de fábrica cargada. Falta publicar.');
+            } catch (err) {
+              aviso('bad', `No se pudo cargar la carta de fábrica: ${enEspanol(err.message)}`);
+            }
+          }
+        }
+      })
+    ])
+  );
+}
+
+function descargar() {
+  renormalizar();
+  const blob = new Blob([JSON.stringify(estado.doc, null, 1)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href: url, download: 'carta.json' });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  toast('Archivo descargado.');
+}
+
+async function importar(archivo) {
+  if (!archivo) return;
+  try {
+    const texto = await archivo.text();
+    const crudo = JSON.parse(texto);
+    const { doc, errors } = normalizeDoc(crudo.doc || crudo, { images: slugsDisponibles() });
+    if (!doc.products.length) throw new Error('el archivo no trae ningún platillo');
+    if (
+      !confirm(
+        `El archivo trae ${doc.products.length} platillo${doc.products.length === 1 ? '' : 's'}. ` +
+          `Reemplazará los ${estado.doc.products.length} que tienes ahora en el panel. ¿Continuar?`
+      )
+    ) {
+      return;
+    }
+    estado.doc = doc;
+    pintarTodo();
+    marcarSucio();
+    if (errors.length) aviso('warn', 'El archivo se cargó con ajustes:', errors);
+    else toast('Archivo cargado. Revisa y publica.');
+  } catch (err) {
+    aviso('bad', `No se pudo leer el archivo: ${err.message}`);
+  }
+}
+
+/* ==================================================================
+   publicar
+   ================================================================== */
+
+
+function revisar() {
+  const problemas = [];
+  for (const p of estado.doc.products) {
+    const nombre = cleanText(p.name, 60);
+    if (!nombre) {
+      problemas.push('Hay un platillo sin nombre. Ponle nombre o quítalo de la carta.');
+      continue;
+    }
+    if (nombre === 'Platillo nuevo') {
+      problemas.push(`"${nombre}" todavía tiene el nombre de ejemplo. Cámbialo o quítalo.`);
+    }
+    if (!(Number(p.basePrice) > 0)) {
+      problemas.push(`"${nombre}" está en $0. Ponle precio o quítalo de la carta.`);
+    }
+    if (Number(p.basePrice) > LIMITES.precioMax) {
+      problemas.push(`El precio de "${nombre}" es demasiado alto. Revisa si sobra algún número.`);
+    }
+  }
+  if (!estado.doc.products.length) problemas.push('La carta se quedaría sin ningún platillo.');
+  if (!estado.doc.categories.length) problemas.push('La carta se quedaría sin categorías.');
+  const b = estado.doc.business;
+  if (b.whatsapp && !/^\d{8,15}$/.test(b.whatsapp)) {
+    problemas.push('El WhatsApp debe tener entre 8 y 15 dígitos, con la clave del país.');
+  }
+  if (b.mapsUrl && !/^https:\/\//.test(b.mapsUrl)) {
+    problemas.push('El enlace del mapa tiene que empezar por https://');
+  }
+  if (b.schedule && b.schedule.days.length && !(b.schedule.to !== b.schedule.from)) {
+    problemas.push('La hora de apertura y la de cierre no pueden ser la misma.');
+  }
+  return [...new Set(problemas)];
+}
+
+async function publicar() {
+  limpiarAviso();
+
+  const problemas = revisar();
+  if (problemas.length) {
+    aviso('bad', 'Antes de publicar hay que arreglar esto:', problemas);
+    return;
+  }
+
+  /* Se normaliza sobre una copia: si la publicación falla, lo que está en
+     pantalla no se toca. Antes, un fallo de red dejaba los cambios ya
+     reescritos y el horario borrado sin haber publicado nada. */
+  const { doc: propuesta, errores } = (() => {
+    const r = normalizeDoc(estado.doc, { images: slugsDisponibles() });
+    return { doc: r.doc, errores: r.errors };
+  })();
+
+  if (estado.modo !== 'live') {
+    estado.doc = propuesta;
+    pintarTodo();
+    marcarSucio();
+    descargar();
+    aviso(
+      'warn',
+      'Este sitio guarda la carta en un archivo. Se descargó carta.json: súbelo a la carpeta del sitio, junto a index.html, y la carta quedará actualizada.',
+      errores
+    );
+    return;
+  }
+
+  const boton = $('#publicar');
+  boton.disabled = true;
+  boton.textContent = 'Publicando…';
+  try {
+    const r = await pedir('api/publicar', {
+      method: 'POST',
+      body: JSON.stringify({ doc: propuesta })
+    });
+    estado.doc = r.doc;
+    borrarBorrador();
+    pintarTodo();
+    marcarSucio(false);
+    const avisos = [...errores, ...(r.avisos || [])];
+    if (avisos.length) aviso('warn', 'Publicado, con estos ajustes:', avisos);
+    else aviso('good', 'Publicado. Los clientes ya ven la carta nueva.');
+    toast('Carta publicada');
+  } catch (err) {
+    if (/Sesión caducada/.test(err.message)) {
+      estado.token = '';
+      mostrarPuerta();
+    }
+    aviso('bad', enEspanol(err.message));
+  } finally {
+    boton.textContent = 'Publicar cambios';
+    boton.disabled = !estado.sucio;
+  }
+}
+
+/* ==================================================================
+   acceso y arranque
+   ================================================================== */
+
+function mostrarPuerta() {
+  $('#gate').hidden = false;
+  $('#app').hidden = true;
+  $('#bar').hidden = true;
+  setTimeout(() => $('#password')?.focus(), 50);
+}
+
+function mostrarPanel() {
+  $('#gate').hidden = true;
+  $('#app').hidden = false;
+  $('#bar').hidden = false;
+}
+
+function pintarTodo() {
+  pintarPlatillos();
+  pintarCategorias();
+  pintarOpciones();
+  pintarNegocio();
+  pintarRespaldo();
+}
+
+function conectarPestanas() {
+  const tabs = $$('.tab');
+  tabs.forEach((tab) =>
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => {
+        const activo = t === tab;
+        t.setAttribute('aria-selected', String(activo));
+        $(`#${t.dataset.panel}`).hidden = !activo;
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+  );
+}
+
+async function arrancar() {
+  estado.slugsBase = Array.isArray(window.SLUGS_BASE) ? window.SLUGS_BASE : [];
+  await detectarModo();
+
+  const pill = $('#modo');
+  pill.dataset.mode = estado.modo;
+  pill.textContent =
+    estado.modo === 'live' ? 'Publica al instante' : 'Se publica con un archivo';
+
+  const crudo = await cargarCarta();
+  if (!crudo) {
+    aviso('bad', 'No se pudo leer la carta del sitio. Recarga la página.');
+    return;
+  }
+  const { doc } = normalizeDoc(crudo, { images: estado.slugsBase });
+  estado.base = JSON.parse(JSON.stringify(doc));
+  estado.doc = doc;
+
+  let borrador = null;
+  try {
+    borrador = JSON.parse(localStorage.getItem(CLAVE_BORRADOR) || 'null');
+  } catch {
+    borrador = null;
+  }
+
+  conectarPestanas();
+  pintarTodo();
+  marcarSucio(false);
+
+  if (borrador && borrador.updatedAt) {
+    /* Se aplica de inmediato. Si sólo se anunciara, la pantalla mostraría la
+       carta del servidor —con los platillos que ella había borrado— y el
+       primer cambio que hiciera sobrescribiría el borrador sin aviso. */
+    const r = normalizeDoc(borrador, { images: slugsDisponibles() });
+    if (r.doc.products.length) {
+      estado.doc = r.doc;
+      pintarTodo();
+      marcarSucio();
+      aviso('warn', 'Recuperamos los cambios que dejaste sin publicar la vez pasada.');
+      $('#aviso').append(
+        el('div.row.mt-sm', {}, [
+          el('button.btn', {
+            type: 'button',
+            text: 'Descartarlos y volver a la carta publicada',
+            on: {
+              click: () => {
+                estado.doc = JSON.parse(JSON.stringify(estado.base));
+                borrarBorrador();
+                pintarTodo();
+                marcarSucio(false);
+                limpiarAviso();
+              }
+            }
+          })
+        ])
+      );
+    } else {
+      borrarBorrador();
+    }
+  }
+
+  if (estado.modo === 'live') mostrarPuerta();
+  else mostrarPanel();
+
+  $('#gate form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const boton = $('#entrar');
+    boton.disabled = true;
+    try {
+      const r = await pedir('api/entrar', {
+        method: 'POST',
+        body: JSON.stringify({ password: $('#password').value })
+      });
+      estado.token = r.token;
+      $('#password').value = '';
+      limpiarAviso();
+      mostrarPanel();
+    } catch (err) {
+      $('#gate-error').textContent = err.message;
+      $('#gate-error').hidden = false;
+    } finally {
+      boton.disabled = false;
+    }
+  });
+
+  $('#publicar').addEventListener('click', publicar);
+  $('#salir').hidden = estado.modo !== 'live';
+  $('#salir').addEventListener('click', async () => {
+    if (estado.sucio && !confirm('Tienes cambios sin publicar. ¿Salir de todos modos?')) return;
+    const token = estado.token;
+    estado.token = '';
+    mostrarPuerta();
+    if (!token) return;
+    /* Se avisa al servidor para que el token deje de valer también si alguien
+       lo copió: borrarlo de esta pantalla no bastaría. */
+    try {
+      await fetch('api/entrar', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+        body: JSON.stringify({ accion: 'salir' })
+      });
+    } catch {
+      /* si no se puede avisar, el token caduca solo en unas horas */
+    }
+  });
+
+  window.addEventListener('beforeunload', (e) => {
+    if (!estado.sucio) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+
+  document.documentElement.dataset.ready = 'true';
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', arrancar, { once: true });
+} else {
+  arrancar();
+}</script>
+</body>
+</html>
