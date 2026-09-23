@@ -629,3 +629,59 @@ p.sec {
     padding-inline: 0.55rem;
   }
 }
+
+/* ---------- pantallas de acceso ---------- */
+.gate__mark {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  margin-inline: auto;
+}
+.gate__box {
+  width: min(30rem, 100%);
+  background: var(--carbon);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  padding: 1.75rem 1.5rem;
+  display: grid;
+  gap: 0.9rem;
+  text-align: center;
+}
+.gate__box h2 {
+  font-family: var(--display);
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+.gate__box p {
+  margin: 0;
+  color: var(--crema-2);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  text-align: left;
+}
+.gate__box code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  background: var(--carbon-3);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.35rem;
+  color: var(--crema);
+}
+.gate__box .btn {
+  justify-self: center;
+  text-decoration: none;
+}
+.gate form small {
+  color: var(--crema-3);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  text-align: center;
+}
+.gate form h2,
+.gate form p {
+  text-align: center;
+}
+.pill[data-mode='archivo']::before {
+  background: var(--rojo);
+}

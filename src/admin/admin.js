@@ -72,8 +72,12 @@ const pesos = (n) => {
 const estado = {
   doc: null,
   base: null,
-  modo: 'local', // 'live' | 'local'
+  /* Se arranca en el estado cerrado: si algo fallara antes de decidir, lo que
+     queda es el panel apagado y no el editor abierto. */
+  modo: 'archivo', // 'live' | 'local' | 'archivo'
   token: '',
+  expira: 0,
+  publicando: false,
   cartaPrecargada: null,
   sucio: false,
   abiertos: new Set(),
@@ -200,13 +204,28 @@ async function pedir(ruta, opciones = {}) {
 }
 
 /**
- * ¿Este sitio tiene las funciones publicadas?
+ * En cuál de los tres estados posibles está este panel.
  *
- * La función de la carta marca su respuesta con una cabecera propia. Un
- * archivo estático no la lleva. Así se sabe en qué modo estamos sin provocar
- * peticiones fallidas ni errores en la consola.
+ *   'live'     el sitio tiene las funciones: hay contraseña de verdad,
+ *              comprobada en el servidor, y se publica al instante.
+ *   'archivo'  el panel está abierto desde un sitio publicado SIN funciones.
+ *              No se abre: en un archivo estático cualquier candado se
+ *              comprueba en el navegador del visitante, y eso no es un
+ *              candado. Se muestra apagado y se explica cómo encenderlo.
+ *   'local'    el panel está abierto desde la computadora (file://). No hace
+ *              falta contraseña porque no está en internet: sólo lo ve quien
+ *              ya tiene acceso a esa computadora.
+ *
+ * La función de la carta marca su respuesta con una cabecera propia; un
+ * archivo estático no la lleva. Así se distingue sin provocar peticiones
+ * fallidas ni errores en la consola.
  */
 async function detectarModo() {
+  /* Android abre un .html descargado con content:// en vez de file://.
+     Ninguno de los dos esquemas se puede servir a internet, así que admitir
+     los dos no debilita la comprobación y evita que el panel de su propia
+     computadora se declare apagado. */
+  const enDisco = ['file:', 'content:'].includes(location.protocol);
   try {
     const res = await fetch('carta.json', { cache: 'no-store' });
     if (res.ok && res.headers.get('x-carbolitas-panel') === '1') {
@@ -216,9 +235,9 @@ async function detectarModo() {
     }
     if (res.ok) estado.cartaPrecargada = await res.json();
   } catch {
-    /* sin red: modo local */
+    /* sin red o desde el disco: se resuelve abajo */
   }
-  estado.modo = 'local';
+  estado.modo = enDisco ? 'local' : 'archivo';
 }
 
 /* ==================================================================
@@ -246,7 +265,10 @@ async function cargarCarta() {
   } catch {
     /* nada que cargar */
   }
-  return null;
+  /* Abierto desde el disco no hay nada que pedir por red: el panel lleva
+     dentro la carta con la que se compiló, y desde ahí se importa la más
+     reciente si hace falta. */
+  return Array.isArray(window.CARTA_EMBEBIDA?.products) ? window.CARTA_EMBEBIDA : null;
 }
 
 function slugsDisponibles() {
@@ -1303,6 +1325,7 @@ async function publicar() {
   const boton = $('#publicar');
   boton.disabled = true;
   boton.textContent = 'Publicando…';
+  estado.publicando = true;
   try {
     const r = await pedir('api/publicar', {
       method: 'POST',
@@ -1317,12 +1340,13 @@ async function publicar() {
     else aviso('good', 'Publicado. Los clientes ya ven la carta nueva.');
     toast('Carta publicada');
   } catch (err) {
-    if (/Sesión caducada/.test(err.message)) {
-      estado.token = '';
-      mostrarPuerta();
+    if (/Sesión caducada|sesión ya no es válida/i.test(err.message)) {
+      olvidarSesion();
+      mostrarPuerta('La sesión caducó. Vuelve a entrar y publica otra vez: tus cambios siguen aquí.');
     }
     aviso('bad', enEspanol(err.message));
   } finally {
+    estado.publicando = false;
     boton.textContent = 'Publicar cambios';
     boton.disabled = !estado.sucio;
   }
@@ -1332,17 +1356,124 @@ async function publicar() {
    acceso y arranque
    ================================================================== */
 
-function mostrarPuerta() {
+function mostrarPuerta(motivo) {
   $('#gate').hidden = false;
   $('#app').hidden = true;
   $('#bar').hidden = true;
+  $('#apagado').hidden = true;
+  /* Sin sesión abierta no hay nada de donde salir. */
+  $('#salir').hidden = true;
+  const nota = $('#gate-nota');
+  nota.textContent = motivo || '';
+  nota.hidden = !motivo;
   setTimeout(() => $('#password')?.focus(), 50);
 }
 
 function mostrarPanel() {
   $('#gate').hidden = true;
+  $('#apagado').hidden = true;
   $('#app').hidden = false;
   $('#bar').hidden = false;
+  $('#salir').hidden = estado.modo !== 'live';
+}
+
+/** El panel publicado sin funciones: no se abre, y se explica por qué. */
+function mostrarApagado() {
+  $('#gate').hidden = true;
+  $('#app').hidden = true;
+  $('#bar').hidden = true;
+  $('#salir').hidden = true;
+  $('#apagado').hidden = false;
+}
+
+/* ---------- la sesión ----------
+   El pase se guarda en sessionStorage y no en localStorage: vive mientras la
+   pestaña esté abierta y se borra al cerrarla. Así recargar la página no la
+   expulsa a media edición, pero cerrar el navegador sí cierra la sesión. */
+
+const CLAVE_SESION = 'carbolitas.panel.sesion.v1';
+const INACTIVIDAD_MS = 30 * 60 * 1000;
+
+function guardarSesion(token, expira, visto = Date.now()) {
+  estado.token = token;
+  estado.expira = expira;
+  try {
+    sessionStorage.setItem(CLAVE_SESION, JSON.stringify({ token, expira, visto }));
+  } catch {
+    /* sin sessionStorage la sesión vive sólo en memoria: sigue funcionando */
+  }
+}
+
+function olvidarSesion() {
+  estado.token = '';
+  estado.expira = 0;
+  try {
+    sessionStorage.removeItem(CLAVE_SESION);
+  } catch {
+    /* nada que borrar */
+  }
+}
+
+function recuperarSesion() {
+  try {
+    const s = JSON.parse(sessionStorage.getItem(CLAVE_SESION) || 'null');
+    const inactiva = Date.now() - Number(s?.visto || 0) > INACTIVIDAD_MS;
+    /* La media hora se comprueba también al recuperar. Sin esto, un teléfono
+       que restaura la pestaña horas después abría el panel sin contraseña:
+       el temporizador empezaba de cero y el pase aún no había caducado. */
+    if (s && s.token && !inactiva && Number(s.expira) > Date.now() + 60000) {
+      estado.token = s.token;
+      estado.expira = Number(s.expira);
+      return true;
+    }
+  } catch {
+    /* sesión ilegible: se pide contraseña */
+  }
+  olvidarSesion();
+  return false;
+}
+
+/**
+ * Cierra la sesión sola tras media hora sin tocar nada, y también cuando
+ * caduca el pase. Es la diferencia entre dejar el teléfono en la barra y
+ * dejar el panel abierto para quien lo levante.
+ */
+let inactividadTimer = 0;
+let vigilando = false;
+
+function tocarSesion() {
+  clearTimeout(inactividadTimer);
+  if (!estado.token) return;
+  guardarSesion(estado.token, estado.expira);
+  inactividadTimer = setTimeout(() => {
+    if (!estado.token) return;
+    olvidarSesion();
+    mostrarPuerta('Se cerró la sesión sola por seguridad. Tus cambios sin publicar siguen aquí.');
+  }, INACTIVIDAD_MS);
+}
+
+function vigilarSesion() {
+  tocarSesion();
+  /* Los oyentes se registran una sola vez: llamar a esto en cada entrada
+     acumulaba tres oyentes y un intervalo más por sesión. */
+  if (vigilando) return;
+  vigilando = true;
+
+  for (const ev of ['pointerdown', 'keydown', 'focus']) {
+    window.addEventListener(ev, tocarSesion, { passive: true });
+  }
+
+  /* El pase caduca a las 8 horas: se comprueba cada minuto para no dejarla
+     tocando "Publicar" contra una sesión que ya no vale. */
+  setInterval(() => {
+    /* Mientras se publica no se toca la pantalla: cortar aquí dejaría el
+       panel diciendo "caducó" justo cuando la publicación va a salir bien. */
+    if (estado.publicando) return;
+    if (estado.token && estado.expira && estado.expira <= Date.now()) {
+      olvidarSesion();
+      mostrarPuerta('La sesión caducó. Vuelve a entrar para publicar.');
+    }
+  }, 60000);
 }
 
 function pintarTodo() {
@@ -1367,14 +1498,28 @@ function conectarPestanas() {
   );
 }
 
+const ETIQUETA_MODO = {
+  live: 'Publica al instante',
+  local: 'Panel en tu computadora',
+  archivo: 'Panel apagado'
+};
+
 async function arrancar() {
   estado.slugsBase = Array.isArray(window.SLUGS_BASE) ? window.SLUGS_BASE : [];
   await detectarModo();
 
   const pill = $('#modo');
   pill.dataset.mode = estado.modo;
-  pill.textContent =
-    estado.modo === 'live' ? 'Publica al instante' : 'Se publica con un archivo';
+  pill.textContent = ETIQUETA_MODO[estado.modo];
+
+  /* Publicado sin funciones: no hay contraseña que comprobar en ningún
+     servidor, así que el panel no se abre. Se corta aquí, antes de cargar
+     nada: lo que no se pinta no se puede espiar. */
+  if (estado.modo === 'archivo') {
+    mostrarApagado();
+    document.documentElement.dataset.ready = 'true';
+    return;
+  }
 
   const crudo = await cargarCarta();
   if (!crudo) {
@@ -1428,37 +1573,47 @@ async function arrancar() {
     }
   }
 
-  if (estado.modo === 'live') mostrarPuerta();
-  else mostrarPanel();
+  if (estado.modo === 'live') {
+    /* Recargar la página no debe expulsarla: si la pestaña sigue abierta y el
+       pase no ha caducado, se entra directo. */
+    if (recuperarSesion()) mostrarPanel();
+    else mostrarPuerta();
+    vigilarSesion();
+  } else {
+    mostrarPanel();
+  }
 
   $('#gate form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const boton = $('#entrar');
+    const campo = $('#password');
     boton.disabled = true;
+    $('#gate-error').hidden = true;
     try {
       const r = await pedir('api/entrar', {
         method: 'POST',
-        body: JSON.stringify({ password: $('#password').value })
+        body: JSON.stringify({ password: campo.value })
       });
-      estado.token = r.token;
-      $('#password').value = '';
+      guardarSesion(r.token, r.expira);
+      campo.value = '';
       limpiarAviso();
       mostrarPanel();
+      vigilarSesion();
     } catch (err) {
-      $('#gate-error').textContent = err.message;
+      $('#gate-error').textContent = enEspanol(err.message);
       $('#gate-error').hidden = false;
+      campo.select();
     } finally {
       boton.disabled = false;
     }
   });
 
   $('#publicar').addEventListener('click', publicar);
-  $('#salir').hidden = estado.modo !== 'live';
   $('#salir').addEventListener('click', async () => {
     if (estado.sucio && !confirm('Tienes cambios sin publicar. ¿Salir de todos modos?')) return;
     const token = estado.token;
-    estado.token = '';
-    mostrarPuerta();
+    olvidarSesion();
+    mostrarPuerta('Sesión cerrada.');
     if (!token) return;
     /* Se avisa al servidor para que el token deje de valer también si alguien
        lo copió: borrarlo de esta pantalla no bastaría. */
