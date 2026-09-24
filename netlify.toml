@@ -1,0 +1,50 @@
+# CARBOLITAS · configuración del sitio con panel administrativo.
+#
+# Este archivo es el que lee Netlify cuando el sitio está conectado a un
+# repositorio. (Para un despliegue arrastrando la carpeta, el que cuenta es el
+# netlify.toml que el build deja dentro de dist/, y ese no activa funciones.)
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# La carta autoriza su <script> y su <style> por hash SHA-256. Si Netlify
+# reescribiera el HTML, aunque fuese un espacio, el navegador bloquearía ambos.
+[build.processing]
+  skip_processing = true
+
+# La carta vigente: misma dirección con panel y sin panel.
+# force = true para que la función gane al archivo estático del mismo nombre.
+[[redirects]]
+  from = "/carta.json"
+  to = "/.netlify/functions/carta"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/entrar"
+  to = "/.netlify/functions/entrar"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/publicar"
+  to = "/.netlify/functions/publicar"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/foto"
+  to = "/.netlify/functions/foto"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/foto/*"
+  to = "/.netlify/functions/foto"
+  status = 200
+  force = true

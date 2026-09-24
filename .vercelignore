@@ -1,0 +1,7 @@
+node_modules
+qa
+.dev-data
+.netlify
+tests
+assets/raw
+panel-en-tu-computadora.html
