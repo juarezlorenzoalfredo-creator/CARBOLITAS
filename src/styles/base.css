@@ -1,0 +1,154 @@
+/* ============================================================
+   CARBOLITAS · sistema base
+   Dirección aprobada por el cliente: noche + brasa, serif de
+   rótulo, fotografía de comida a sangre y pedido por WhatsApp.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- la noche --- */
+  --noche: #0d0c0b;
+  --carbon: #161412;
+  --carbon-2: #1e1a17;
+  --carbon-3: #272220;
+  --linea: rgba(245, 239, 227, 0.12);
+  --linea-2: rgba(245, 239, 227, 0.22);
+
+  /* --- la crema --- */
+  --crema: #f7f1e6;
+  --crema-2: rgba(247, 241, 230, 0.66);
+  --crema-3: rgba(247, 241, 230, 0.42);
+
+  /* --- la brasa --- */
+  --brasa: #f2762b;
+  --brasa-2: #ff9147;
+  --brasa-osc: #c85511;
+  --ambar: #ffb648;
+  --verde-wa: #25d366;
+
+  --font-display: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+  --font-text: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --gutter: clamp(1rem, 4.5vw, 2.5rem);
+  --measure: 78rem;
+  --r: 1.25rem; /* radio de tarjeta */
+  --r-pill: 999px;
+
+  --t-fast: 140ms;
+  --t-base: 240ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  background: var(--noche);
+}
+
+body {
+  margin: 0;
+  background: var(--noche);
+  color: var(--crema);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--brasa-2);
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brasa-2);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--brasa);
+  color: #fff;
+}
+
+/* --- tipografía --- */
+.kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--crema-3);
+  margin: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 0.75rem;
+  top: -4rem;
+  z-index: 200;
+  background: var(--brasa);
+  color: #fff;
+  padding: 0.7rem 1rem;
+  border-radius: var(--r-pill);
+  font-weight: 700;
+  transition: top var(--t-fast) var(--ease);
+}
+.skip:focus {
+  top: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

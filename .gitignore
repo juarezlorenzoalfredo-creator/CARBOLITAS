@@ -1,0 +1,8 @@
+node_modules/
+# lo regenera el build; no se versiona para que no se quede desfasado
+panel-en-tu-computadora.html
+.dev-data/
+qa/
+.netlify/
+.DS_Store
+*.log
